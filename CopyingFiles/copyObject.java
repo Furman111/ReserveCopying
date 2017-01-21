@@ -1,7 +1,8 @@
-package Files;
+package CopyingFiles;
 
 import java.util.Calendar;
 import Modes.Mode;
+import java.io.File;
 
 /**
  * Created by Furman on 21.01.2017.
@@ -28,13 +29,11 @@ public abstract class copyObject {
     public boolean delete(){
         throw new UnsupportedOperationException();
     }
-    public boolean upgrade(){
+    public boolean upgrade(int i){
         throw new UnsupportedOperationException();
     }
 
-    public boolean isDirectory(){
-        throw new UnsupportedOperationException();
-    }
+    public boolean isDirectory(){throw new UnsupportedOperationException();}
     public boolean isFile(){
         throw new UnsupportedOperationException();
     }
@@ -42,6 +41,6 @@ public abstract class copyObject {
     public String getObjectName(){throw new UnsupportedOperationException();}
     public String getObjectPath(){throw new UnsupportedOperationException();}
 
-    public String getCopyingPath(){throw new UnsupportedOperationException();}
-    public void setCopyingPath(String Path){throw new UnsupportedOperationException();}
+    public File getCopyingFileSource(){throw new UnsupportedOperationException();}
+    public void setCopyingFileSource(File copyingFileSource){throw new UnsupportedOperationException();}
 }
