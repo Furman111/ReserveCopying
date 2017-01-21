@@ -15,7 +15,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class DirectoryCopyObject extends copyObject {
 
     private Mode mode;
-    private Calendar time;
+    private long time;
     private File file;
     private File copyingFileSource;
 
@@ -92,12 +92,12 @@ public class DirectoryCopyObject extends copyObject {
     }
 
     @Override
-    public Calendar getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(Calendar time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

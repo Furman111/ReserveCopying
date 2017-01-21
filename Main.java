@@ -9,9 +9,8 @@ import Modes.*;
 
 public class Main {
     public static void main(String[] args) {
-        File file = new File("C:\\Users\\Furman\\Desktop\\test\\from\\");
+        File file = new File("C:\\Users\\Furman\\Desktop\\test\\from\\Talanty.docx");
         File to  = new File("C:\\Users\\Furman\\Desktop\\test\\to");
         copyObject copy = new FileCopyObject(file,to,new GregorianCalendar());
-        System.out.println(copy.copy());
     }
 }

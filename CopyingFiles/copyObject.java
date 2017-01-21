@@ -9,10 +9,10 @@ import java.io.File;
  */
 public abstract class copyObject {
 
-    public void setTime(Calendar time){
+    public void setTime(long time){
         throw new UnsupportedOperationException();
     }
-    public Calendar getTime(){
+    public long getTime(){
         throw new UnsupportedOperationException();
     }
 

@@ -11,12 +11,12 @@ import java.util.Calendar;
  */
 public class FileCopyObject extends copyObject{
 
-    private Calendar time;
+    private long time;
     private File file;
     private File copyingFileSource;
     int numberOfCopies;
 
-    public FileCopyObject(File file,File copyingFileSource, Calendar time){
+    public FileCopyObject(File file,File copyingFileSource, long time){
         this.file = file;
         this.copyingFileSource = copyingFileSource;
         this.time = time;
@@ -58,12 +58,12 @@ public class FileCopyObject extends copyObject{
     }
 
     @Override
-    public Calendar getTime() {
+    public long getTime() {
         return time;
     }
 
     @Override
-    public void setTime(Calendar time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
