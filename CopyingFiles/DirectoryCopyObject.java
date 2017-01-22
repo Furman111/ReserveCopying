@@ -5,21 +5,74 @@ import Modes.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.ArrayList;
 
 /**
  * Created by Furman on 21.01.2017.
  */
-public class DirectoryCopyObject extends copyObject {
+
+public class DirectoryCopyObject extends CopyObject {
 
     private Mode mode;
     private long timeToCopy;
     private File file;
     private File copyingFileSource;
+    private ArrayList<CopyObject> copyObjects;
+    private ArrayList<Long> timesOfCopies;
 
 
-    public void fullCopy(File from, File to) throws IOException {
+    public DirectoryCopyObject(File file, File copyingFileSource, Mode mode, long timeToCopy) {
+        this.mode = mode;
+        this.timeToCopy = timeToCopy;
+        this.copyingFileSource = copyingFileSource;
+        this.file = file;
+        copyObjects = new ArrayList<>();
+        timesOfCopies = new ArrayList<>();
+        refreshCopyObjects();
+    }
+
+
+    void refreshCopyObjects() {
+        File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
+        boolean contains = false;
+        for (int i = 0; i < file.list().length; i++) {
+            for (int j = 0; j < copyObjects.size(); j++) {
+                if (copyObjects.get(j).getObjectPath().equals(file.listFiles()[i].getPath()))
+                    contains = true;
+            }
+            if (contains == false) {
+                if (file.listFiles()[i].isFile()) {
+                    copyObjects.add(new FileCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
+                } else {
+                    copyObjects.add(new DirectoryCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
+                }
+            }
+        }
+        for (int i = 0; i < copyObjects.size(); i++) {
+            contains = false;
+            for (int j = 0; j < file.listFiles().length; j++) {
+                if (copyObjects.get(i).getObjectPath().equals(file.listFiles()[j].getPath()))
+                    contains = true;
+            }
+            if (contains == false)
+                copyObjects.remove(i);
+        }
+    }
+
+    public boolean copy() {
+        try {
+            refreshCopyObjects();
+            timesOfCopies.add(new Long(file.lastModified()));
+            File temp = new File(copyingFileSource + "\\" + file.getName());
+            Files.copy(file.toPath(), temp.toPath());
+            for (int i = 0; i < copyObjects.size(); i++)
+                copyObjects.get(i).copy();
+        }
+        catch (IOException e){return  false;}
+        return true;
+    }
+
+   /* public void fullCopy(File from, File to) throws IOException {
         try {
             File fromNext, toNext;
             Files.copy(from.toPath(), to.toPath(), REPLACE_EXISTING);
@@ -55,23 +108,7 @@ public class DirectoryCopyObject extends copyObject {
         } catch (IOException e) {
             throw new IOException();
         }
-    }
-
-    public boolean copy() {
-        try {
-            switch (mode) {
-                case FULL:
-                    fullCopy(file, copyingFileSource);
-                    break;
-                case INC:
-                case DEC:
-            }
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-
+    }*/
 
     public DirectoryCopyObject(File file) {
         this.file = file;

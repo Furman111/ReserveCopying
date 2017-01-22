@@ -14,7 +14,7 @@ import static java.nio.file.StandardCopyOption.*;
 /**
  * Created by Furman on 21.01.2017.
  */
-public class FileCopyObject extends copyObject {
+public class FileCopyObject extends CopyObject {
 
     private long timeToCopy;
     private File file;
@@ -31,7 +31,6 @@ public class FileCopyObject extends copyObject {
         numberOfCopies = 0;
         timesOfCopies = new ArrayList<>();
         timesOfCopies.clear();
-        this.copy();
     }
 
     public boolean copy() {

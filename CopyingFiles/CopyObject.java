@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Created by Furman on 21.01.2017.
  */
-public abstract class copyObject {
+public abstract class CopyObject {
 
     public void setTimeToCopy(long timeToCopy) {
         throw new UnsupportedOperationException();
@@ -30,12 +30,7 @@ public abstract class copyObject {
     public boolean copy() {
         throw new UnsupportedOperationException();
     }
-
     public boolean delete() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean upgrade(int i) {
         throw new UnsupportedOperationException();
     }
     public boolean upgrade(long time) {
