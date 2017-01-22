@@ -1,7 +1,5 @@
 package CopyingFiles;
 
-import java.util.Calendar;
-
 import Modes.Mode;
 
 import java.io.File;
@@ -33,6 +31,7 @@ public abstract class CopyObject {
     public boolean delete() {
         throw new UnsupportedOperationException();
     }
+
     public boolean upgrade(long time) {
         throw new UnsupportedOperationException();
     }
@@ -69,4 +68,8 @@ public abstract class CopyObject {
     public long getLastCopyTime() {
         throw new UnsupportedOperationException();
     }
+
+    public void setDeleted(long deleteTime){  throw new UnsupportedOperationException();}
+
+    public long getDeleted(){throw  new UnsupportedOperationException();}
 }

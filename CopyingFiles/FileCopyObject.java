@@ -22,33 +22,45 @@ public class FileCopyObject extends CopyObject {
     private Mode mode;
     private int numberOfCopies;
     private ArrayList<Long> timesOfCopies;
+    private long deleteTime;
 
-    public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {
-        this.file = file;
-        this.copyingFileSource = copyingFileSource;
-        this.timeToCopy = time;
-        this.mode = mode;
-        numberOfCopies = 0;
-        timesOfCopies = new ArrayList<>();
-        timesOfCopies.clear();
+    public FileCopyObject (File file, File copyingFileSource, Mode mode, long time) {
+        if(file.exists()) {
+            this.file = file;
+            this.copyingFileSource = copyingFileSource;
+            this.timeToCopy = time;
+            this.mode = mode;
+            numberOfCopies = 0;
+            timesOfCopies = new ArrayList<>();
+            timesOfCopies.clear();
+            deleteTime = 0;
+        }
+        else
+            throw new Error("Файл не существует");
     }
 
     public boolean copy() {
-        try {
-            switch (mode) {
-                case INC:
-                    incCopy();
-                case DEC:
-                    decCopy();
+        if (file.exists()) {
+            try {
+                switch (mode) {
+                    case INC:
+                        incCopy();
+                    case DEC:
+                        decCopy();
+                }
+            } catch (IOException e) {
+                return false;
             }
-        } catch (IOException e) {
+            return true;
+        } else {
+            if (deleteTime==0)
+                deleteTime = timesOfCopies.get(timesOfCopies.size()-1);
             return false;
         }
-        return true;
     }
 
     public void decCopy() throws IOException {
-        try {
+        try{
             if (numberOfCopies == 0) {
                 numberOfCopies++;
                 File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
@@ -105,6 +117,7 @@ public class FileCopyObject extends CopyObject {
         return true;
     }
 
+/*
     public boolean upgrade(int i) {
         try {
             if ((i >= 1) && (i <= numberOfCopies)) {
@@ -117,21 +130,25 @@ public class FileCopyObject extends CopyObject {
         }
         return true;
     }
+*/
 
     public boolean upgrade(long time) {
-        try {
-            if (time < timesOfCopies.get(0).longValue()) throw new IOException();
-            int i = 0;
-            while ((i < numberOfCopies - 1) && (time > timesOfCopies.get(i).longValue())) i++;
-            if (time < timesOfCopies.get(i).longValue())
-                i--;
-            i++;
-            File temp = new File(copyingFileSource.getPath() + "\\" + "v" + i + "_" + file.getName());
-            Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-        } catch (IOException e) {
-            return false;
+        if ((deleteTime>=time)||(deleteTime==0)) {
+            try {
+                if (time < timesOfCopies.get(0).longValue()) throw new IOException();
+                int i = 0;
+                while ((i < numberOfCopies - 1) && (time > timesOfCopies.get(i).longValue())) i++;
+                if (time < timesOfCopies.get(i).longValue())
+                    i--;
+                i++;
+                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + i + "_" + file.getName());
+                Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public long getTimeToCopy() {
@@ -167,4 +184,11 @@ public class FileCopyObject extends CopyObject {
         return file.lastModified();
     }
 
+    public void setDeleted(long deleteTime) {
+        this.deleteTime = deleteTime;
+    }
+
+    public long getDeleted() {
+        return deleteTime;
+    }
 }

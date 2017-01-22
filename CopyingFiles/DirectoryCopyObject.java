@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
+import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 /**
  * Created by Furman on 21.01.2017.
  */
@@ -19,16 +22,22 @@ public class DirectoryCopyObject extends CopyObject {
     private File copyingFileSource;
     private ArrayList<CopyObject> copyObjects;
     private ArrayList<Long> timesOfCopies;
+    private long deleteTime;
 
 
     public DirectoryCopyObject(File file, File copyingFileSource, Mode mode, long timeToCopy) {
-        this.mode = mode;
-        this.timeToCopy = timeToCopy;
-        this.copyingFileSource = copyingFileSource;
-        this.file = file;
-        copyObjects = new ArrayList<>();
-        timesOfCopies = new ArrayList<>();
-        refreshCopyObjects();
+        if(file.exists()) {
+            this.mode = mode;
+            this.timeToCopy = timeToCopy;
+            this.copyingFileSource = copyingFileSource;
+            this.file = file;
+            copyObjects = new ArrayList<>();
+            timesOfCopies = new ArrayList<>();
+            deleteTime = 0;
+            refreshCopyObjects();
+        }
+        else
+            throw new Error("Файл не существует");
     }
 
 
@@ -48,28 +57,55 @@ public class DirectoryCopyObject extends CopyObject {
                 }
             }
         }
-        for (int i = 0; i < copyObjects.size(); i++) {
-            contains = false;
-            for (int j = 0; j < file.listFiles().length; j++) {
-                if (copyObjects.get(i).getObjectPath().equals(file.listFiles()[j].getPath()))
-                    contains = true;
-            }
-            if (contains == false)
-                copyObjects.remove(i);
-        }
     }
 
     public boolean copy() {
-        try {
-            refreshCopyObjects();
-            timesOfCopies.add(new Long(file.lastModified()));
-            File temp = new File(copyingFileSource + "\\" + file.getName());
-            Files.copy(file.toPath(), temp.toPath());
-            for (int i = 0; i < copyObjects.size(); i++)
-                copyObjects.get(i).copy();
+        if (file.exists()) {
+            try {
+                refreshCopyObjects();
+                timesOfCopies.add(new Long(file.lastModified()));
+                File temp = new File(copyingFileSource + "\\" + file.getName());
+                if(!temp.exists()) Files.copy(file.toPath(), temp.toPath(), REPLACE_EXISTING,COPY_ATTRIBUTES);
+                for (int i = 0; i < copyObjects.size(); i++) {
+                    copyObjects.get(i).copy();
+                }
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
+        } else {
+            if (deleteTime == 0)
+                deleteTime = timesOfCopies.get(timesOfCopies.size()-1);
+            return false;
         }
-        catch (IOException e){return  false;}
+    }
+
+    public boolean delete(){
+        refreshCopyObjects();
+        for (int i = 0; i < copyObjects.size(); i++) {
+            copyObjects.get(i).delete();
+        }
+        File temp = new File(copyingFileSource+"\\"+file.getName());
+        temp.delete();
         return true;
+    }
+
+    public boolean upgrade(long time){
+        if ((deleteTime>=time)||(deleteTime==0)){
+                try {
+                File temp = new File(copyingFileSource + "\\" + file.getName());
+                if (!temp.exists()) Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
+                for (int i = 0; i < copyObjects.size(); i++) {
+                    copyObjects.get(i).upgrade(time);
+                }
+            }
+            catch(IOException e){
+                return false;
+            }
+            return true;
+        }
+        else
+            return false;
     }
 
    /* public void fullCopy(File from, File to) throws IOException {
@@ -159,4 +195,13 @@ public class DirectoryCopyObject extends CopyObject {
     public File getCopyingFileSource() {
         return copyingFileSource;
     }
+
+    public void setDeleted(long deleteTime) {
+        this.deleteTime = deleteTime;
+    }
+
+    public long getDeleted() {
+        return deleteTime;
+    }
+
 }
