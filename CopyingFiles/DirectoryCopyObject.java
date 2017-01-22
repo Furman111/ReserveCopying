@@ -81,7 +81,6 @@ public class DirectoryCopyObject extends CopyObject {
     }
 
     public boolean delete(){
-        refreshCopyObjects();
         for (int i = 0; i < copyObjects.size(); i++) {
             copyObjects.get(i).delete();
         }
@@ -91,10 +90,10 @@ public class DirectoryCopyObject extends CopyObject {
     }
 
     public boolean upgrade(long time){
-        if ((deleteTime>=time)||(deleteTime==0)){
+            if ((deleteTime>=time)||(deleteTime==0)){
                 try {
                 File temp = new File(copyingFileSource + "\\" + file.getName());
-                if (!temp.exists()) Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
+                if (!file.exists()) Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
                 for (int i = 0; i < copyObjects.size(); i++) {
                     copyObjects.get(i).upgrade(time);
                 }
@@ -105,6 +104,7 @@ public class DirectoryCopyObject extends CopyObject {
             return true;
         }
         else
+            System.out.println(time-deleteTime);
             return false;
     }
 

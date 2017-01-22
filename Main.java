@@ -3,9 +3,9 @@
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
+
 
 import CopyingFiles.*;
 import Modes.*;
@@ -14,16 +14,19 @@ public class Main {
     public static void main(String[] args) {
         File file = new File("C:\\Users\\Furman\\Desktop\\test\\from\\вывы");
         File to = new File("C:\\Users\\Furman\\Desktop\\test\\to");
-        CopyObject copy = new DirectoryCopyObject(file, to, Mode.DEC, 10000);
-        int i = 2;
+        CopyObject copy = new DirectoryCopyObject(file, to, Mode.INC, 5000);
+        int i = 5;
+        long start = System.currentTimeMillis();
         while (i > 0) {
             System.out.println(copy.copy());
             i--;
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
         }
-        copy.delete();
+        System.out.println(copy.upgrade(System.currentTimeMillis()-start));
+
     }
+
 }
