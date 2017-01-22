@@ -1,7 +1,9 @@
 package CopyingFiles;
 
 import java.util.Calendar;
+
 import Modes.Mode;
+
 import java.io.File;
 
 /**
@@ -9,38 +11,67 @@ import java.io.File;
  */
 public abstract class copyObject {
 
-    public void setTime(long time){
-        throw new UnsupportedOperationException();
-    }
-    public long getTime(){
+    public void setTimeToCopy(long timeToCopy) {
         throw new UnsupportedOperationException();
     }
 
-    public void setMode(Mode mode){
-        throw new UnsupportedOperationException();
-    }
-    public Mode getMode(){
+    public long getTimeToCopy() {
         throw new UnsupportedOperationException();
     }
 
-    public boolean copy(){
-        throw new UnsupportedOperationException();
-    }
-    public boolean delete(){
-        throw new UnsupportedOperationException();
-    }
-    public boolean upgrade(int i){
+    public void setMode(Mode mode) {
         throw new UnsupportedOperationException();
     }
 
-    public boolean isDirectory(){throw new UnsupportedOperationException();}
-    public boolean isFile(){
+    public Mode getMode() {
         throw new UnsupportedOperationException();
     }
 
-    public String getObjectName(){throw new UnsupportedOperationException();}
-    public String getObjectPath(){throw new UnsupportedOperationException();}
+    public boolean copy() {
+        throw new UnsupportedOperationException();
+    }
 
-    public File getCopyingFileSource(){throw new UnsupportedOperationException();}
-    public void setCopyingFileSource(File copyingFileSource){throw new UnsupportedOperationException();}
+    public boolean delete() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean upgrade(int i) {
+        throw new UnsupportedOperationException();
+    }
+    public boolean upgrade(long time) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    public boolean isDirectory() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isFile() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getObjectName() {
+        throw new UnsupportedOperationException();
+    }
+
+    public String getObjectPath() {
+        throw new UnsupportedOperationException();
+    }
+
+    public File getCopyingFileSource() {
+        throw new UnsupportedOperationException();
+    }
+
+    public void setCopyingFileSource(File copyingFileSource) {
+        throw new UnsupportedOperationException();
+    }
+
+    public long getLastModification() {
+        throw new UnsupportedOperationException();
+    }
+
+    public long getLastCopyTime() {
+        throw new UnsupportedOperationException();
+    }
 }

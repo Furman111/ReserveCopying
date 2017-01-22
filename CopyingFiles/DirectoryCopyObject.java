@@ -5,7 +5,6 @@ import Modes.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Calendar;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -15,9 +14,10 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class DirectoryCopyObject extends copyObject {
 
     private Mode mode;
-    private long time;
+    private long timeToCopy;
     private File file;
     private File copyingFileSource;
+
 
     public void fullCopy(File from, File to) throws IOException {
         try {
@@ -91,14 +91,12 @@ public class DirectoryCopyObject extends copyObject {
         this.mode = mode;
     }
 
-    @Override
-    public long getTime() {
-        return time;
+    public long getTimeToCopy() {
+        return timeToCopy;
     }
 
-    @Override
-    public void setTime(long time) {
-        this.time = time;
+    public void setTimeToCopy(long timeToCopy) {
+        this.timeToCopy = timeToCopy;
     }
 
     public boolean isFile() {
