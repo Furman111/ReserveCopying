@@ -1,194 +1,124 @@
 package CopyingFiles;
 
+import CopyingFiles.copies.CopyOfFile;
 import Modes.Mode;
+import filesystemprocess.FSProcessor;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-
-
-import static java.nio.file.StandardCopyOption.*;
+import java.util.*;
 
 
 /**
  * Created by Furman on 21.01.2017.
  */
-public class FileCopyObject extends CopyObject {
+public class FileCopyObject implements CopyObject {
 
     private long timeToCopy;
     private File file;
     private File copyingFileSource;
     private Mode mode;
-    private int numberOfCopies;
-    private ArrayList<Long> timesOfCopies;
-    private long deleteTime;
+    private ArrayList<CopyOfFile> copies;
 
-    public FileCopyObject (File file, File copyingFileSource, Mode mode, long time) {
-        if(file.exists()) {
+    public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {
+        if (file.exists()) {
             this.file = file;
-            this.copyingFileSource = copyingFileSource;
+            this.copyingFileSource = new File(copyingFileSource.getPath() + "\\" + mode.toString() + "\\");
+            if (!this.copyingFileSource.exists())
+                FSProcessor.createDirectory(this.copyingFileSource);
             this.timeToCopy = time;
             this.mode = mode;
-            numberOfCopies = 0;
-            timesOfCopies = new ArrayList<>();
-            timesOfCopies.clear();
-            deleteTime = 0;
-        }
-        else
+            copies = new ArrayList<>();
+            copies.clear();
+        } else
             throw new Error("Файл не существует");
     }
 
     public boolean copy() {
+        switch (mode) {
+            case INC:
+                return (incCopy());
+            case DEC:
+                return (decCopy());
+        }
+        return false;
+    }
+
+    public boolean decCopy() {
+        boolean res = true;
         if (file.exists()) {
-            try {
-                switch (mode) {
-                    case INC:
-                        incCopy();
-                    case DEC:
-                        decCopy();
-                }
-            } catch (IOException e) {
-                return false;
-            }
-            return true;
-        } else {
-            if (deleteTime==0)
-                deleteTime = timesOfCopies.get(timesOfCopies.size()-1);
-            return false;
-        }
-    }
-
-    public void decCopy() throws IOException {
-        try{
-            if (numberOfCopies == 0) {
-                numberOfCopies++;
-                File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                Files.copy(file.toPath(), temp.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-                timesOfCopies.add(new Long(file.lastModified()));
+            File temp = new File(copyingFileSource + "\\" + "v" + 1 + "_" + file.getName());
+            if (copies.isEmpty()) {
+                res = FSProcessor.copyFromTo(file, temp);
+                copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
             } else {
-                File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                if (file.lastModified() > temp.lastModified()) {
-                    if (numberOfCopies == 1) {
-                        numberOfCopies++;
-                        timesOfCopies.add(new Long(file.lastModified()));
-                    }
-                    temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                    Files.copy(file.toPath(), temp.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-                    timesOfCopies.set(1, new Long(file.lastModified()));
+                if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
+                    temp = new File(copyingFileSource + "\\" + 2 + "_" + file.getName());
+                    res = FSProcessor.copyFromTo(file, temp);
+                    if (copies.size() == 1)
+                        copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                    else
+                        copies.set(1, new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
                 }
             }
-        } catch (IOException e) {
-            throw new IOException();
-        }
+        } else if (copies.get(copies.size() - 1).isDeleted())
+            copies.set(copies.size() - 1, new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+        else
+            copies.add(new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+        return res;
     }
 
-    public void incCopy() throws IOException {
-        try {
-            if (numberOfCopies == 0) {
-                numberOfCopies++;
-                File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                Files.copy(file.toPath(), temp.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-                timesOfCopies.add(new Long(file.lastModified()));
+    public boolean incCopy() {
+        boolean res = true;
+        if (file.exists()) {
+            File temp = new File(copyingFileSource + "\\" + "v" + (copies.size()+1) + "_" + file.getName());
+            if (copies.isEmpty()) {
+                res = FSProcessor.copyFromTo(file, temp);
+                copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
             } else {
-                File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                if (file.lastModified() > temp.lastModified()) {
-                    numberOfCopies++;
-                    temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-                    Files.copy(file.toPath(), temp.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-                    timesOfCopies.add(new Long(file.lastModified()));
-                } else
-                    throw new IOException();
+                if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
+                    temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
+                    res = FSProcessor.copyFromTo(file, temp);
+                    copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                }
             }
-        } catch (IOException e) {
-            throw new IOException();
-        }
+        } else if (copies.get(copies.size() - 1).isDeleted())
+            copies.set(copies.size() - 1, new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+        else
+            copies.add(new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+        return res;
     }
 
     public boolean delete() {
-        try {
-            for (int i = 1; i <= numberOfCopies; i++) {
-                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + i + "_" + file.getName());
-                temp.delete();
+        boolean res = true;
+        for (int i = 0; i < copies.size(); i++) {
+            if (!copies.get(i).isDeleted()) {
+                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i+1) + "_" + file.getName());
+                res = FSProcessor.deleteFile(temp);
             }
-        } catch (Exception e) {
-            return false;
         }
-        return true;
+        return res;
     }
-
-/*
-    public boolean upgrade(int i) {
-        try {
-            if ((i >= 1) && (i <= numberOfCopies)) {
-                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + i + "_" + file.getName());
-                Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-            } else
-                throw new IOException();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
-    }
-*/
 
     public boolean upgrade(long time) {
-        if ((deleteTime>=time)||(deleteTime==0)) {
-            try {
-                if (time < timesOfCopies.get(0).longValue()) throw new IOException();
-                int i = 0;
-                while ((i < numberOfCopies - 1) && (time > timesOfCopies.get(i).longValue())) i++;
-                if (time < timesOfCopies.get(i).longValue())
-                    i--;
-                i++;
-                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + i + "_" + file.getName());
-                Files.copy(temp.toPath(), file.toPath(), REPLACE_EXISTING, COPY_ATTRIBUTES);
-            } catch (IOException e) {
-                return false;
-            }
-            return true;
+        for (int i = 0; i < copies.size(); i++) {
+            if (copies.get(i).getTimeOfCopy() == time)
+                if (!copies.get(i).isDeleted()) {
+                    File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i+1) + "_" + file.getName());
+                    return FSProcessor.copyFromTo(temp,file);
+                }
         }
         return false;
-    }
-
-    public long getTimeToCopy() {
-        return timeToCopy;
-    }
-
-    public void setTimeToCopy(long timeToCopy) {
-        this.timeToCopy = timeToCopy;
-    }
-
-    public boolean isFile() {
-        return true;
-    }
-
-    public boolean isDirectory() {
-        return false;
-    }
-
-    public String getObjectName() {
-        return file.getName();
     }
 
     public String getObjectPath() {
         return file.getPath();
     }
 
-    public File getCopyingFileSource() {
-        return copyingFileSource;
+    public List<Long> getListOfCopiesTimes(){
+        ArrayList<Long> res = new ArrayList<>();
+        for(int i=0;i<copies.size();i++)
+            res.add(copies.get(i).getTimeOfCopy());
+        return res;
     }
 
-    public long getLastModification() {
-        File temp = new File(copyingFileSource + "\\" + "v" + numberOfCopies + "_" + file.getName());
-        return file.lastModified();
-    }
-
-    public void setDeleted(long deleteTime) {
-        this.deleteTime = deleteTime;
-    }
-
-    public long getDeleted() {
-        return deleteTime;
-    }
 }
