@@ -2,7 +2,7 @@ package CopyingFiles;
 
 import CopyingFiles.copies.CopyOfFile;
 import Modes.Mode;
-import filesystemprocess.FSProcessor;
+import filesystemprocess.FilesManager;
 
 import java.io.File;
 import java.util.*;
@@ -22,9 +22,7 @@ public class FileCopyObject implements CopyObject {
     public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {
         if (file.exists()) {
             this.file = file;
-            this.copyingFileSource = new File(copyingFileSource.getPath() + "\\" + mode.toString() + "\\");
-            if (!this.copyingFileSource.exists())
-                FSProcessor.createDirectory(this.copyingFileSource);
+            this.copyingFileSource = new File(copyingFileSource.getPath());
             this.timeToCopy = time;
             this.mode = mode;
             copies = new ArrayList<>();
@@ -33,58 +31,58 @@ public class FileCopyObject implements CopyObject {
             throw new Error("Файл не существует");
     }
 
-    public boolean copy() {
+    public boolean copy(long timeOfCopy) {
         switch (mode) {
             case INC:
-                return (incCopy());
-            case DEC:
-                return (decCopy());
+                return (incCopy(timeOfCopy));
+            case DEF:
+                return (decCopy(timeOfCopy));
         }
         return false;
     }
 
-    public boolean decCopy() {
+    public boolean decCopy(long timeOfCopy) {
         boolean res = true;
         if (file.exists()) {
-            File temp = new File(copyingFileSource + "\\" + "v" + 1 + "_" + file.getName());
             if (copies.isEmpty()) {
-                res = FSProcessor.copyFromTo(file, temp);
-                copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                File temp = new File(copyingFileSource + "\\" + "v" + 1 + "_" + file.getName());
+                res = FilesManager.copyFromTo(file, temp);
+                copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
-                    temp = new File(copyingFileSource + "\\" + 2 + "_" + file.getName());
-                    res = FSProcessor.copyFromTo(file, temp);
+                    File temp = new File(copyingFileSource + "\\" + "v" + 2 + "_" + file.getName());
+                    res = FilesManager.copyFromTo(file, temp);
                     if (copies.size() == 1)
-                        copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                        copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
                     else
-                        copies.set(1, new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                        copies.set(1, new CopyOfFile(timeOfCopy, file.lastModified(), false));
                 }
             }
         } else if (copies.get(copies.size() - 1).isDeleted())
-            copies.set(copies.size() - 1, new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+            copies.set(copies.size() - 1, new CopyOfFile(timeOfCopy, timeOfCopy, true));
         else
-            copies.add(new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+            copies.add(new CopyOfFile(timeOfCopy, timeOfCopy, true));
         return res;
     }
 
-    public boolean incCopy() {
+    public boolean incCopy(long timeOfCopy) {
         boolean res = true;
         if (file.exists()) {
-            File temp = new File(copyingFileSource + "\\" + "v" + (copies.size()+1) + "_" + file.getName());
             if (copies.isEmpty()) {
-                res = FSProcessor.copyFromTo(file, temp);
-                copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                File temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
+                res = FilesManager.copyFromTo(file, temp);
+                copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
-                    temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
-                    res = FSProcessor.copyFromTo(file, temp);
-                    copies.add(new CopyOfFile(System.currentTimeMillis(), file.lastModified(), false));
+                    File temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
+                    res = FilesManager.copyFromTo(file, temp);
+                    copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
                 }
             }
         } else if (copies.get(copies.size() - 1).isDeleted())
-            copies.set(copies.size() - 1, new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+            copies.set(copies.size() - 1, new CopyOfFile(timeOfCopy, System.currentTimeMillis(), true));
         else
-            copies.add(new CopyOfFile(System.currentTimeMillis(), System.currentTimeMillis(), true));
+            copies.add(new CopyOfFile(timeOfCopy, System.currentTimeMillis(), true));
         return res;
     }
 
@@ -92,8 +90,8 @@ public class FileCopyObject implements CopyObject {
         boolean res = true;
         for (int i = 0; i < copies.size(); i++) {
             if (!copies.get(i).isDeleted()) {
-                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i+1) + "_" + file.getName());
-                res = FSProcessor.deleteFile(temp);
+                File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i + 1) + "_" + file.getName());
+                res = FilesManager.deleteFile(temp);
             }
         }
         return res;
@@ -103,8 +101,8 @@ public class FileCopyObject implements CopyObject {
         for (int i = 0; i < copies.size(); i++) {
             if (copies.get(i).getTimeOfCopy() == time)
                 if (!copies.get(i).isDeleted()) {
-                    File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i+1) + "_" + file.getName());
-                    return FSProcessor.copyFromTo(temp,file);
+                    File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i + 1) + "_" + file.getName());
+                    return FilesManager.copyFromTo(temp, file);
                 }
         }
         return false;
@@ -114,11 +112,21 @@ public class FileCopyObject implements CopyObject {
         return file.getPath();
     }
 
-    public List<Long> getListOfCopiesTimes(){
+    public List<Long> getListOfCopiesTimes() {
         ArrayList<Long> res = new ArrayList<>();
-        for(int i=0;i<copies.size();i++)
+        for (int i = 0; i < copies.size(); i++)
             res.add(copies.get(i).getTimeOfCopy());
         return res;
     }
+
+    public FileCopyObject clone() {
+        FileCopyObject res = new FileCopyObject(this.file, this.copyingFileSource, this.mode, this.timeToCopy);
+        res.copies = new ArrayList<>();
+        for (int i = 0; i < this.copies.size(); i++)
+            res.copies.add(i, new CopyOfFile(this.copies.get(i).getTimeOfCopy(), this.copies.get(i).getTimeOfModification(), this.copies.get(i).isDeleted()));
+        return res;
+    }
+
+
 
 }

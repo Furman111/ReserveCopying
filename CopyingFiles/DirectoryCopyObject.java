@@ -2,7 +2,7 @@ package CopyingFiles;
 
 import CopyingFiles.copies.CopyOfDirectory;
 import Modes.*;
-import filesystemprocess.FSProcessor;
+import filesystemprocess.FilesManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,9 +26,7 @@ public class DirectoryCopyObject implements CopyObject {
         if (file.exists()) {
             this.mode = mode;
             this.timeToCopy = timeToCopy;
-            this.copyingFileSource = new File(copyingFileSource.getPath() + "\\" + mode.toString() + "\\");
-            if (!this.copyingFileSource.exists())
-                FSProcessor.createDirectory(this.copyingFileSource);
+            this.copyingFileSource = new File(copyingFileSource.getPath());
             this.file = file;
             copies = new ArrayList<>();
             copies.clear();
@@ -39,13 +37,14 @@ public class DirectoryCopyObject implements CopyObject {
     }
 
 
-    public boolean copy() {
+    public boolean copy(long t) {
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
         for (int i = 0; i < file.list().length; i++) {
             boolean contains = false;
-            for (CopyObject o : copyObjects)
-                if (o.getObjectPath() == file.listFiles()[i].getPath())
+            for (CopyObject o : copyObjects){
+                if (o.getObjectPath().equals(file.listFiles()[i].getPath()))
                     contains = true;
+            }
             if (!contains) {
                 if (file.listFiles()[i].isFile()) {
                     copyObjects.add(new FileCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
@@ -54,10 +53,9 @@ public class DirectoryCopyObject implements CopyObject {
                 }
             }
         }
-        long currentTime = System.currentTimeMillis();
-        copies.add(new CopyOfDirectory(currentTime, copyObjects));
-        if (!temp.exists()) FSProcessor.copyFromTo(file, temp);
-        return (copies.get(copies.size() - 1).copy());
+        copies.add(new CopyOfDirectory(t, copyObjects));
+        if (!temp.exists()) FilesManager.copyFromTo(file, temp);
+        return (copies.get(copies.size() - 1).copy(t));
     }
 
     public boolean delete() {
@@ -65,18 +63,21 @@ public class DirectoryCopyObject implements CopyObject {
             cop.delete();
         }
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
-        return (FSProcessor.deleteFile(temp));
+        return (FilesManager.deleteFile(temp));
     }
 
     public boolean upgrade(long time) {
-        FSProcessor.deleteFile(file);
+        FilesManager.deleteFile(file);
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
-        if (!temp.exists()) FSProcessor.copyFromTo(temp, file);
+        if (!file.exists()) FilesManager.copyFromTo(temp, file);
         int i = 0;
         while ((i < copies.size()) && (time != copies.get(i).getTime())) i++;
         if (i < copies.size()) return copies.get(i).upgrade();
-        else
+        else {
+            System.out.println(copies.size());
+            System.out.println("i = "+i);
             return false;
+        }
     }
 
     public String getObjectPath() {
@@ -89,5 +90,7 @@ public class DirectoryCopyObject implements CopyObject {
             res.add(copies.get(i).getTime());
         return res;
     }
+
+
 
 }

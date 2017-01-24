@@ -12,7 +12,7 @@ import java.util.List;
 public interface CopyObject {
 
 
-    boolean copy();
+    boolean copy(long timeOfCopy);
 
     boolean delete();
 

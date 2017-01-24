@@ -18,6 +18,10 @@ public class CopyOfFile {
         return timeOfCopy;
     }
 
+    public long getTimeOfModification(){
+        return timeOfModification;
+    }
+
     public void setDeleted(){deleted=true;}
     public boolean isDeleted(){return deleted;}
 }

@@ -17,7 +17,9 @@ public class CopyOfDirectory {
     private ArrayList<CopyObject> files;
 
     public CopyOfDirectory(long time,ArrayList<CopyObject> files){
-        this.files =(ArrayList<CopyObject>) files.clone();
+        this.files = new ArrayList<>();
+        for(int i=0;i<files.size();i++)
+            this.files.add(i,files.get(i));
         this.time = time;
     }
 
@@ -39,9 +41,9 @@ public class CopyOfDirectory {
           return true;
     }
 
-    public boolean copy(){
+    public boolean copy(long timeOfCopy){
         for(CopyObject j:files){
-            if(!j.copy())
+            if(!j.copy(timeOfCopy))
                 return false;
         }
         return true;
