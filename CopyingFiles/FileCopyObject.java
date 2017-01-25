@@ -5,13 +5,14 @@ import Modes.Mode;
 import filesystemprocess.FilesManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 
 /**
  * Created by Furman on 21.01.2017.
  */
-public class FileCopyObject implements CopyObject {
+public class FileCopyObject implements CopyObject,Serializable {
 
     private long timeToCopy;
     private File file;

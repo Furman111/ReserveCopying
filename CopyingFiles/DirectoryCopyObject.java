@@ -5,6 +5,7 @@ import Modes.*;
 import filesystemprocess.FilesManager;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by Furman on 21.01.2017.
  */
 
-public class DirectoryCopyObject implements CopyObject {
+public class DirectoryCopyObject implements CopyObject,Serializable {
 
     private Mode mode;
     private long timeToCopy;

@@ -6,7 +6,7 @@ import CopyingFiles.Journal;
 import java.io.*;
 
 public class DataManager{
-    public static final String BASE_PATH = "";
+    public static final String BASE_PATH = "Journal.jour";
     public static Journal journal;
 
     public static Journal getJournal() throws FileNotFoundException,IOException,ClassNotFoundException{
@@ -16,12 +16,12 @@ public class DataManager{
                 in.close();
                 return journal;
             } catch (FileNotFoundException e) {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException("Журнал не найден!");
             } catch (IOException e) {
-                throw new IOException();
+                throw new IOException("Ошибка при чтении журнала!");
             }
             catch (ClassNotFoundException e){
-                throw new ClassCastException();
+                throw new ClassCastException("Нестандартное содержание журнала!");
             }
         }
         else return journal;
@@ -32,6 +32,28 @@ public class DataManager{
             try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BASE_PATH))) {
                 out.writeObject(journal);
                 out.close();
+            }catch (FileNotFoundException e) {
+                throw new FileNotFoundException("Журнал не найден!");
+            }
+            catch(IOException e){
+                throw  new IOException("Не удалось сохранить журнал!");
+            }
+        }
+        else
+            throw new IOException("Журнал не был загружен!");
+    }
+
+    public static void saveJournal(Journal j) throws IOException{
+        if (j!=null){
+            try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BASE_PATH))) {
+                out.writeObject(j);
+                out.close();
+                File file = new File(BASE_PATH);
+                file.setWritable(false);
+                file.setReadable(false);
+            }
+            catch (FileNotFoundException e) {
+                throw new FileNotFoundException("Журнал не найден!");
             }
             catch(IOException e){
                 throw  new IOException("Не удалось сохранить журнал!");

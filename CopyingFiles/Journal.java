@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Furman on 25.01.2017.
  */
-public class Journal implements Iterable,Serializable{
+public class Journal implements Iterable<CopyObject>,Serializable{
     private List<CopyObject> copyFiles;
 
     public Journal(){
