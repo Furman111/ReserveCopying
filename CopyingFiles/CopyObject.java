@@ -11,15 +11,24 @@ import java.util.List;
  */
 public interface CopyObject {
 
-
     boolean copy(long timeOfCopy);
 
     boolean delete();
 
     boolean upgrade(long time);
 
-    String getObjectPath();
+    String getPath();
 
     List<Long> getListOfCopiesTimes();
+
+    boolean isDeleted();
+
+    boolean isFile();
+
+    boolean isDirectory();
+
+    String getName();
+
+
 
 }

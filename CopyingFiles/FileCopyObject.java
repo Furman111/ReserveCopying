@@ -46,12 +46,12 @@ public class FileCopyObject implements CopyObject {
         if (file.exists()) {
             if (copies.isEmpty()) {
                 File temp = new File(copyingFileSource + "\\" + "v" + 1 + "_" + file.getName());
-                res = FilesManager.copyFromTo(file, temp);
+                res = FilesManager.fileToZipCopy(file, temp);
                 copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
                     File temp = new File(copyingFileSource + "\\" + "v" + 2 + "_" + file.getName());
-                    res = FilesManager.copyFromTo(file, temp);
+                    res = FilesManager.fileToZipCopy(file, temp);
                     if (copies.size() == 1)
                         copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
                     else
@@ -70,12 +70,12 @@ public class FileCopyObject implements CopyObject {
         if (file.exists()) {
             if (copies.isEmpty()) {
                 File temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
-                res = FilesManager.copyFromTo(file, temp);
+                res = FilesManager.fileToZipCopy(file, temp);
                 copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
                     File temp = new File(copyingFileSource + "\\" + "v" + (copies.size() + 1) + "_" + file.getName());
-                    res = FilesManager.copyFromTo(file, temp);
+                    res = FilesManager.fileToZipCopy(file, temp);
                     copies.add(new CopyOfFile(timeOfCopy, file.lastModified(), false));
                 }
             }
@@ -91,7 +91,7 @@ public class FileCopyObject implements CopyObject {
         for (int i = 0; i < copies.size(); i++) {
             if (!copies.get(i).isDeleted()) {
                 File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i + 1) + "_" + file.getName());
-                res = FilesManager.deleteFile(temp);
+                res = FilesManager.deleteZipFile(temp);
             }
         }
         return res;
@@ -102,13 +102,13 @@ public class FileCopyObject implements CopyObject {
             if (copies.get(i).getTimeOfCopy() == time)
                 if (!copies.get(i).isDeleted()) {
                     File temp = new File(copyingFileSource.getPath() + "\\" + "v" + (i + 1) + "_" + file.getName());
-                    return FilesManager.copyFromTo(temp, file);
+                    return FilesManager.zipToFileCopy(temp, file);
                 }
         }
         return false;
     }
 
-    public String getObjectPath() {
+    public String getPath() {
         return file.getPath();
     }
 
@@ -127,6 +127,17 @@ public class FileCopyObject implements CopyObject {
         return res;
     }
 
+    public boolean isDeleted(){
+        return copies.get(copies.size()-1).isDeleted();
+    }
 
+    public boolean isFile(){
+        return true;
+    }
 
+    public boolean isDirectory(){
+        return false;
+    }
+
+    public String getName(){ return file.getName(); }
 }

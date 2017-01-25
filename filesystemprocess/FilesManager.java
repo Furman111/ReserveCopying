@@ -14,7 +14,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public class FilesManager {
 
-    public static boolean copyFromTo(File from, File to) {
+    public static boolean copyFileFromTo(File from, File to) {
         try {
             Files.copy(from.toPath(), to.toPath(), REPLACE_EXISTING);
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class FilesManager {
     public static boolean fileToZipCopy(File from, File to) {
         try (
                 FileInputStream fileInputStream = new FileInputStream(from);
-                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(to.toPath() + "\\" + from.getName() + ".zip"))) {
+                ZipOutputStream out = new ZipOutputStream(new FileOutputStream(to.toPath() + ".zip"))) {
             out.putNextEntry(new ZipEntry(from.getName()));
             byte[] buffer = new byte[fileInputStream.available()];
             fileInputStream.read(buffer);
@@ -47,14 +47,17 @@ public class FilesManager {
         return true;
     }
 
+    public static boolean deleteZipFile(File zipFile){
+        return (new File(zipFile.toPath()+".zip").delete());
+    }
+
     public static boolean zipToFileCopy(File from, File to) {
         try {
             ZipFile zipFile = new ZipFile(from.getPath()+".zip");
             Enumeration entries = zipFile.entries();
             while(entries.hasMoreElements()){
                 ZipEntry entry =(ZipEntry) entries.nextElement();
-                File temp = new File(to.getPath()+"\\"+entry.getName());
-                write(zipFile.getInputStream(entry), new FileOutputStream(temp));
+                write(zipFile.getInputStream(entry), new FileOutputStream(to));
             }
         }
         catch(IOException e){return false;}

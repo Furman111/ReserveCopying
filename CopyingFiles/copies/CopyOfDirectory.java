@@ -15,12 +15,14 @@ import java.io.File;
 public class CopyOfDirectory {
     private long time;
     private ArrayList<CopyObject> files;
+    private boolean deleted;
 
-    public CopyOfDirectory(long time,ArrayList<CopyObject> files){
+    public CopyOfDirectory(long time,ArrayList<CopyObject> files,boolean isDeleted){
         this.files = new ArrayList<>();
         for(int i=0;i<files.size();i++)
             this.files.add(i,files.get(i));
         this.time = time;
+        this.deleted=isDeleted;
     }
 
     public boolean delete(){
@@ -47,6 +49,10 @@ public class CopyOfDirectory {
                 return false;
         }
         return true;
+    }
+
+    public boolean isDeleted(){
+        return deleted;
     }
     
 }

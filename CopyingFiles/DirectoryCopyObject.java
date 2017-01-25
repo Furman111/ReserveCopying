@@ -38,24 +38,31 @@ public class DirectoryCopyObject implements CopyObject {
 
 
     public boolean copy(long t) {
-        File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
-        for (int i = 0; i < file.list().length; i++) {
-            boolean contains = false;
-            for (CopyObject o : copyObjects){
-                if (o.getObjectPath().equals(file.listFiles()[i].getPath()))
-                    contains = true;
-            }
-            if (!contains) {
-                if (file.listFiles()[i].isFile()) {
-                    copyObjects.add(new FileCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
-                } else {
-                    copyObjects.add(new DirectoryCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
+        if (file.exists()) {
+            copyObjects.clear();
+            File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
+            for (int i = 0; i < file.list().length; i++) {
+                boolean contains = false;
+                for (CopyObject o : copyObjects) {
+                    if (o.getPath().equals(file.listFiles()[i].getPath()))
+                        contains = true;
+                }
+                if (!contains) {
+                    if (file.listFiles()[i].isFile()) {
+                        copyObjects.add(new FileCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
+                    } else {
+                        copyObjects.add(new DirectoryCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
+                    }
                 }
             }
-        }
-        copies.add(new CopyOfDirectory(t, copyObjects));
-        if (!temp.exists()) FilesManager.copyFromTo(file, temp);
-        return (copies.get(copies.size() - 1).copy(t));
+            copies.add(new CopyOfDirectory(t, copyObjects, false));
+            if (!temp.exists()) FilesManager.copyFileFromTo(file, temp);
+            return (copies.get(copies.size() - 1).copy(t));
+        } else if (!copies.get(copies.size() - 1).isDeleted()) {
+            copies.add(new CopyOfDirectory(t, copyObjects, true));
+        } else
+            copies.set(copies.size() - 1, new CopyOfDirectory(t, copyObjects, true));
+        return true;
     }
 
     public boolean delete() {
@@ -69,28 +76,40 @@ public class DirectoryCopyObject implements CopyObject {
     public boolean upgrade(long time) {
         FilesManager.deleteFile(file);
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
-        if (!file.exists()) FilesManager.copyFromTo(temp, file);
+        if (!file.exists()) FilesManager.copyFileFromTo(temp, file);
         int i = 0;
         while ((i < copies.size()) && (time != copies.get(i).getTime())) i++;
         if (i < copies.size()) return copies.get(i).upgrade();
         else {
             System.out.println(copies.size());
-            System.out.println("i = "+i);
+            System.out.println("i = " + i);
             return false;
         }
     }
 
-    public String getObjectPath() {
+    public String getPath() {
         return file.getPath();
     }
 
-    public List<Long> getListOfCopiesTimes(){
+    public List<Long> getListOfCopiesTimes() {
         ArrayList<Long> res = new ArrayList<>();
-        for(int i=0;i<copies.size();i++)
+        for (int i = 0; i < copies.size(); i++)
             res.add(copies.get(i).getTime());
         return res;
     }
 
+    public boolean isDeleted() {
+        return copies.get(copies.size()-1).isDeleted();
+    }
 
+    public boolean isFile(){
+        return false;
+    }
+
+    public boolean isDirectory(){
+        return true;
+    }
+
+    public String getName(){ return file.getName(); }
 
 }
