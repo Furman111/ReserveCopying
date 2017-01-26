@@ -31,4 +31,11 @@ public interface CopyObject {
 
     long getTimeOfLastAttemption();
 
+    boolean checkCopies();
+
+    void repairCopies();
+
+    boolean checkCopyInTime(long time);
+    void deleteCopyInTime(long time);
+
 }

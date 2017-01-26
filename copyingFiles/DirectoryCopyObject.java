@@ -23,6 +23,44 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     private ArrayList<CopyObject> copyObjects;
     private long timeOfLastAttemption;
 
+    public void repairCopies() {
+        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists())) {
+            copies.clear();
+        } else
+            for (int i = 0; i < copies.size(); i++)
+                if (!copies.get(i).check()) {
+                    copies.get(i).repair();
+                    copies.remove(i);
+                }
+    }
+
+    public boolean checkCopies() {
+        boolean res = true;
+        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists()))
+            return false;
+        else
+            for (int i = 0; i < copies.size(); i++)
+                res = copies.get(i).check();
+        return res;
+    }
+
+    public boolean checkCopyInTime(long time) {
+        boolean res = false;
+        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists()))
+            return false;
+        else
+            for (int i = 0; i < copies.size(); i++)
+                if (copies.get(i).getTime() == time)
+                    res = copies.get(i).check();
+        return res;
+    }
+
+    public void deleteCopyInTime(long time) {
+        for (CopyOfDirectory c : copies)
+            if (c.getTime() == time)
+                c.repair();
+    }
+
 
     public DirectoryCopyObject(File file, File copyingFileSource, Mode mode, long timeToCopy) {
         if (file.exists()) {
@@ -58,7 +96,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
                     }
                 }
             }
-            for (int j=0;j<copyObjects.size();j++){
+            for (int j = 0; j < copyObjects.size(); j++) {
                 boolean contains = false;
                 for (int i = 0; i < file.list().length; i++) {
                     if (file.listFiles()[i].getPath().equals(copyObjects.get(j).getPath()))

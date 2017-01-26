@@ -44,10 +44,10 @@ public class CopyOfDirectory implements Serializable{
     }
 
     public boolean delete(){
-          for(CopyObject j:files)
-              if(!j.delete())
-                  return false;
-          return true;
+        for(CopyObject j:files)
+            if(!j.delete())
+                return false;
+        return true;
     }
 
     public long getTime(){
@@ -72,6 +72,19 @@ public class CopyOfDirectory implements Serializable{
     public boolean isDeleted(){
         return deleted;
     }
+
+    public boolean check(){
+        boolean res = true;
+        for (int i=0;i<files.size();i++)
+            res = files.get(i).checkCopyInTime(time);
+        return res;
+    }
+
+    public void repair(){
+        for(int i=0;i<files.size();i++)
+            files.get(i).deleteCopyInTime(time);
+    }
+
     
 }
 

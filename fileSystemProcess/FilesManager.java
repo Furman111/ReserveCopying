@@ -73,5 +73,16 @@ public class FilesManager {
         in.close();
     }
 
+    public static boolean copyExists(File file){
+        return (new File(file.getPath()+".zip").exists());
+    }
+
+    public static boolean renameCopy(File file,String name){
+        try {
+            Files.copy(new File(file.getPath() + ".zip").toPath(), new File(name + ".zip").toPath());
+        }
+        catch (IOException e){return false;}
+        return true;
+    }
 
 }
