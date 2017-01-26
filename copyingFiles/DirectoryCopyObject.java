@@ -21,6 +21,7 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
     private File copyingFileSource;
     private ArrayList<CopyOfDirectory> copies;
     private ArrayList<CopyObject> copyObjects;
+    private long timeOfLastAttemption;
 
 
     public DirectoryCopyObject(File file, File copyingFileSource, Mode mode, long timeToCopy) {
@@ -33,12 +34,14 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
             copies.clear();
             copyObjects = new ArrayList<>();
             copyObjects.clear();
+            timeOfLastAttemption = 0;
         } else
             throw new Error("Файл не существует");
     }
 
 
     public boolean copy(long t) {
+        timeOfLastAttemption = t;
         if (file.exists()) {
             copyObjects.clear();
             File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
@@ -123,6 +126,7 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
         DirectoryCopyObject that = (DirectoryCopyObject) o;
 
         if (timeToCopy != that.timeToCopy) return false;
+        if (timeOfLastAttemption != that.timeOfLastAttemption) return false;
         if (mode != that.mode) return false;
         if (file != null ? !file.equals(that.file) : that.file != null) return false;
         if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
@@ -139,6 +143,7 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
         result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
         result = 31 * result + (copies != null ? copies.hashCode() : 0);
         result = 31 * result + (copyObjects != null ? copyObjects.hashCode() : 0);
+        result = 31 * result + (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
         return result;
     }
 
@@ -151,5 +156,9 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
 
     public long getTimeToCopy(){
         return timeToCopy;
+    }
+
+    public long getTimeOfLastAttemption(){
+        return timeOfLastAttemption;
     }
 }

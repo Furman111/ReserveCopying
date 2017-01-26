@@ -30,19 +30,6 @@ public class Journal implements Iterable<CopyObject>,Serializable{
         return null;
     }
 
-    public List<CopyObject> getAllCopyFiles(){
-        return copyFiles;
-    }
-
-    public Iterator iterator(){return copyFiles.iterator();}
-
-    public void delete(int i){
-        copyFiles.get(i).delete();
-        copyFiles.remove(i);
-    }
-
-    public int size(){return copyFiles.size();}
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,4 +44,18 @@ public class Journal implements Iterable<CopyObject>,Serializable{
     public int hashCode() {
         return copyFiles != null ? copyFiles.hashCode() : 0;
     }
+
+    public List<CopyObject> getAllCopyFiles(){
+        return copyFiles;
+    }
+
+    public Iterator iterator(){return copyFiles.iterator();}
+
+    public void delete(int i){
+        copyFiles.get(i).delete();
+        copyFiles.remove(i);
+    }
+
+    public int size(){return copyFiles.size();}
+
 }

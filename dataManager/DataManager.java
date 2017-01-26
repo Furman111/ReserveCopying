@@ -12,7 +12,7 @@ public class DataManager{
     public static Journal getJournal() throws FileNotFoundException,IOException,ClassNotFoundException{
         if (journal==null) {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BASE_PATH))) {
-                journal =(Journal) in.readObject();
+                journal = (Journal) in.readObject();
                 return journal;
             } catch (FileNotFoundException e) {
                 throw new FileNotFoundException("Журнал не найден!");
@@ -30,7 +30,9 @@ public class DataManager{
         if (journal!=null){
             try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BASE_PATH))) {
                 out.writeObject(journal);
-                out.close();
+                File file = new File(BASE_PATH);
+                file.setWritable(true);
+                file.setReadable(true);
             }catch (FileNotFoundException e) {
                 throw new FileNotFoundException("Журнал не найден!");
             }
@@ -46,7 +48,6 @@ public class DataManager{
         if (j!=null){
             try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BASE_PATH))) {
                 out.writeObject(j);
-                out.close();
                 File file = new File(BASE_PATH);
                 file.setWritable(true);
                 file.setReadable(true);

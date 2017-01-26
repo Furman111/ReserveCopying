@@ -2,7 +2,6 @@ package tracking;
 
 import copyingFiles.CopyObject;
 import copyingFiles.Journal;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,14 +25,18 @@ public class CopierThread implements Runnable{
             copyList = new ArrayList<>(journal.getAllCopyFiles());
             copyList.sort(new CopyObjectComparator());
             hashCode = currentHashCode;
+            System.out.println();
+            for(CopyObject j:copyList)
+                System.out.println(j.getName());
+            System.out.println();
         }
     }
 
     public void run(){
-        while(true){
+        while(!Thread.interrupted()){
             sort(journal.hashCode());
             long currentTime = System.currentTimeMillis();
-            if (!copyList.isEmpty() && (copyList.get(0).getLastCopyTime()+copyList.get(0).getTimeToCopy())<=currentTime)
+            if (!copyList.isEmpty() && (copyList.get(0).getTimeOfLastAttemption()+copyList.get(0).getTimeToCopy())<=currentTime)
                 copyList.get(0).copy(currentTime);
         }
     }

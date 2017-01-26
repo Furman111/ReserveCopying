@@ -29,4 +29,6 @@ public interface CopyObject {
 
     long getTimeToCopy();
 
+    long getTimeOfLastAttemption();
+
 }

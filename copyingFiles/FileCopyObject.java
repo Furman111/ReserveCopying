@@ -19,6 +19,7 @@ public class FileCopyObject implements CopyObject,Serializable {
     private Mode mode;
     private ArrayList<CopyOfFile> copies;
     private long timeToCopy;
+    private long timeOfLastAttemption;
 
     @Override
     public boolean equals(Object o) {
@@ -28,6 +29,7 @@ public class FileCopyObject implements CopyObject,Serializable {
         FileCopyObject that = (FileCopyObject) o;
 
         if (timeToCopy != that.timeToCopy) return false;
+        if (timeOfLastAttemption != that.timeOfLastAttemption) return false;
         if (file != null ? !file.equals(that.file) : that.file != null) return false;
         if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
             return false;
@@ -37,14 +39,14 @@ public class FileCopyObject implements CopyObject,Serializable {
 
     @Override
     public int hashCode() {
-        int result = (int) (timeToCopy ^ (timeToCopy >>> 32));
-        result = 31 * result + (file != null ? file.hashCode() : 0);
+        int result = file != null ? file.hashCode() : 0;
         result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
         result = 31 * result + (mode != null ? mode.hashCode() : 0);
         result = 31 * result + (copies != null ? copies.hashCode() : 0);
+        result = 31 * result + (int) (timeToCopy ^ (timeToCopy >>> 32));
+        result = 31 * result + (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
         return result;
     }
-
 
     public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {
         if (file.exists()) {
@@ -54,11 +56,13 @@ public class FileCopyObject implements CopyObject,Serializable {
             this.mode = mode;
             copies = new ArrayList<>();
             copies.clear();
+            timeOfLastAttemption=0;
         } else
             throw new Error("Файл не существует");
     }
 
     public boolean copy(long timeOfCopy) {
+        timeOfLastAttemption = timeOfCopy;
         switch (mode) {
             case INC:
                 return (incCopy(timeOfCopy));
@@ -177,5 +181,9 @@ public class FileCopyObject implements CopyObject,Serializable {
 
     public long getTimeToCopy(){
         return timeToCopy;
+    }
+
+    public long getTimeOfLastAttemption(){
+        return timeOfLastAttemption;
     }
 }

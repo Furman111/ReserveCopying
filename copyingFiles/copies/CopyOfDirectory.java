@@ -2,23 +2,45 @@ package copyingFiles.copies;
 
 import copyingFiles.CopyObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /**
  * Created by Furman on 24.01.2017.
  */
-public class CopyOfDirectory {
+public class CopyOfDirectory implements Serializable{
     private long time;
     private ArrayList<CopyObject> files;
     private boolean deleted;
 
-    public CopyOfDirectory(long time,ArrayList<CopyObject> files,boolean isDeleted){
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CopyOfDirectory that = (CopyOfDirectory) o;
+
+        if (time != that.time) return false;
+        if (deleted != that.deleted) return false;
+        return files != null ? files.equals(that.files) : that.files == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (time ^ (time >>> 32));
+        result = 31 * result + (files != null ? files.hashCode() : 0);
+        result = 31 * result + (deleted ? 1 : 0);
+        return result;
+    }
+
+    public CopyOfDirectory(long time, ArrayList<CopyObject> files, boolean isDeleted){
         this.files = new ArrayList<>();
         for(int i=0;i<files.size();i++)
             this.files.add(i,files.get(i));
         this.time = time;
         this.deleted=isDeleted;
+
     }
 
     public boolean delete(){
