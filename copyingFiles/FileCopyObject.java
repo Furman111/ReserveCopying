@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by Furman on 21.01.2017.
  */
-public class FileCopyObject implements CopyObject,Serializable {
+public class FileCopyObject implements CopyObject, Serializable {
 
     private File file;
     private File copyingFileSource;
@@ -56,7 +56,7 @@ public class FileCopyObject implements CopyObject,Serializable {
             this.mode = mode;
             copies = new ArrayList<>();
             copies.clear();
-            timeOfLastAttemption=0;
+            timeOfLastAttemption = 0;
         } else
             throw new Error("Файл не существует");
     }
@@ -125,6 +125,7 @@ public class FileCopyObject implements CopyObject,Serializable {
                 res = FilesManager.deleteZipFile(temp);
             }
         }
+        copies.clear();
         return res;
     }
 
@@ -158,32 +159,34 @@ public class FileCopyObject implements CopyObject,Serializable {
         return res;
     }
 
-    public boolean isDeleted(){
-        return copies.get(copies.size()-1).isDeleted();
+    public boolean isDeleted() {
+        return copies.get(copies.size() - 1).isDeleted();
     }
 
-    public boolean isFile(){
+    public boolean isFile() {
         return true;
     }
 
-    public boolean isDirectory(){
+    public boolean isDirectory() {
         return false;
     }
 
-    public String getName(){ return file.getName(); }
+    public String getName() {
+        return file.getName();
+    }
 
-    public long getLastCopyTime(){
-        if(!copies.isEmpty())
-            return copies.get(copies.size()-1).getTimeOfCopy();
+    public long getLastCopyTime() {
+        if (!copies.isEmpty())
+            return copies.get(copies.size() - 1).getTimeOfCopy();
         else
             return 0;
     }
 
-    public long getTimeToCopy(){
+    public long getTimeToCopy() {
         return timeToCopy;
     }
 
-    public long getTimeOfLastAttemption(){
+    public long getTimeOfLastAttemption() {
         return timeOfLastAttemption;
     }
 }

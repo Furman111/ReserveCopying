@@ -25,10 +25,6 @@ public class CopierThread implements Runnable{
             copyList = new ArrayList<>(journal.getAllCopyFiles());
             copyList.sort(new CopyObjectComparator());
             hashCode = currentHashCode;
-            System.out.println();
-            for(CopyObject j:copyList)
-                System.out.println(j.getName());
-            System.out.println();
         }
     }
 

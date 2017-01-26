@@ -4,26 +4,16 @@
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.File;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
-
-
 import copyingFiles.*;
-
 import dataManager.DataManager;
-import modesOfCopying.Mode;
 import tracking.CopierThread;
-import java.util.concurrent.TimeUnit;
-
 
 public class Main {
     public static void main(String[] args) {
         try {
-/*            Journal journal = new Journal();
-            journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\1.txt"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
-            journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\2.txt"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
-            journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\3.txt"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
+/*          Journal journal = new Journal();
+            journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\ewew.txt"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
+            journal.add(new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
             DataManager.saveJournal(journal);*/
             Journal serializedJournal = DataManager.getJournal();
             for (CopyObject j : serializedJournal)
@@ -32,6 +22,7 @@ public class Main {
             copier.start();
             Thread.sleep(10000);
             copier.interrupt();
+            DataManager.getJournal().get(0).upgrade(DataManager.getJournal().get(0).getListOfCopiesTimes().get(1));
             DataManager.saveJournal();
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());

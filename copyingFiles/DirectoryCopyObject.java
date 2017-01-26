@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Furman on 21.01.2017.
  */
 
-public class DirectoryCopyObject implements CopyObject,Serializable {
+public class DirectoryCopyObject implements CopyObject, Serializable {
 
     private Mode mode;
     private long timeToCopy;
@@ -43,7 +43,6 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
     public boolean copy(long t) {
         timeOfLastAttemption = t;
         if (file.exists()) {
-            copyObjects.clear();
             File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
             for (int i = 0; i < file.list().length; i++) {
                 boolean contains = false;
@@ -57,6 +56,16 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
                     } else {
                         copyObjects.add(new DirectoryCopyObject(file.listFiles()[i], temp, mode, timeToCopy));
                     }
+                }
+            }
+            for (int j=0;j<copyObjects.size();j++){
+                boolean contains = false;
+                for (int i = 0; i < file.list().length; i++) {
+                    if (file.listFiles()[i].getPath().equals(copyObjects.get(j).getPath()))
+                        contains = true;
+                }
+                if (!contains) {
+                    copyObjects.remove(j);
                 }
             }
             copies.add(new CopyOfDirectory(t, copyObjects, false));
@@ -154,11 +163,11 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
             return 0;
     }
 
-    public long getTimeToCopy(){
+    public long getTimeToCopy() {
         return timeToCopy;
     }
 
-    public long getTimeOfLastAttemption(){
+    public long getTimeOfLastAttemption() {
         return timeOfLastAttemption;
     }
 }
