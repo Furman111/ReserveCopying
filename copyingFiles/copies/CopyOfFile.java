@@ -1,4 +1,4 @@
-package CopyingFiles.copies;
+package copyingFiles.copies;
 
 /**
  * Created by Furman on 24.01.2017.

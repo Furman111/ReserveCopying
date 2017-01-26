@@ -1,4 +1,4 @@
-package filesystemprocess;
+package fileSystemProcess;
 
 import java.io.*;
 import java.nio.file.Files;

@@ -1,8 +1,8 @@
-package CopyingFiles;
+package copyingFiles;
 
-import CopyingFiles.copies.CopyOfDirectory;
-import Modes.*;
-import filesystemprocess.FilesManager;
+import copyingFiles.copies.CopyOfDirectory;
+import modesOfCopying.*;
+import fileSystemProcess.FilesManager;
 
 import java.io.File;
 import java.io.Serializable;
@@ -100,17 +100,56 @@ public class DirectoryCopyObject implements CopyObject,Serializable {
     }
 
     public boolean isDeleted() {
-        return copies.get(copies.size()-1).isDeleted();
+        return copies.get(copies.size() - 1).isDeleted();
     }
 
-    public boolean isFile(){
+    public boolean isFile() {
         return false;
     }
 
-    public boolean isDirectory(){
+    public boolean isDirectory() {
         return true;
     }
 
-    public String getName(){ return file.getName(); }
+    public String getName() {
+        return file.getName();
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DirectoryCopyObject that = (DirectoryCopyObject) o;
+
+        if (timeToCopy != that.timeToCopy) return false;
+        if (mode != that.mode) return false;
+        if (file != null ? !file.equals(that.file) : that.file != null) return false;
+        if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
+            return false;
+        if (copies != null ? !copies.equals(that.copies) : that.copies != null) return false;
+        return copyObjects != null ? copyObjects.equals(that.copyObjects) : that.copyObjects == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mode != null ? mode.hashCode() : 0;
+        result = 31 * result + (int) (timeToCopy ^ (timeToCopy >>> 32));
+        result = 31 * result + (file != null ? file.hashCode() : 0);
+        result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
+        result = 31 * result + (copies != null ? copies.hashCode() : 0);
+        result = 31 * result + (copyObjects != null ? copyObjects.hashCode() : 0);
+        return result;
+    }
+
+    public long getLastCopyTime() {
+        if (!copies.isEmpty())
+            return copies.get(copies.size() - 1).getTime();
+        else
+            return 0;
+    }
+
+    public long getTimeToCopy(){
+        return timeToCopy;
+    }
 }

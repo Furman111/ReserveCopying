@@ -1,7 +1,7 @@
-/**
+package dataManager; /**
  * Created by Furman on 25.01.2017.
  */
-import CopyingFiles.Journal;
+import copyingFiles.Journal;
 
 import java.io.*;
 
@@ -13,7 +13,6 @@ public class DataManager{
         if (journal==null) {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BASE_PATH))) {
                 journal =(Journal) in.readObject();
-                in.close();
                 return journal;
             } catch (FileNotFoundException e) {
                 throw new FileNotFoundException("Журнал не найден!");
@@ -49,8 +48,8 @@ public class DataManager{
                 out.writeObject(j);
                 out.close();
                 File file = new File(BASE_PATH);
-                file.setWritable(false);
-                file.setReadable(false);
+                file.setWritable(true);
+                file.setReadable(true);
             }
             catch (FileNotFoundException e) {
                 throw new FileNotFoundException("Журнал не найден!");

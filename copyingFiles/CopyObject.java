@@ -1,10 +1,5 @@
-package CopyingFiles;
+package copyingFiles;
 
-import Modes.Mode;
-
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +25,8 @@ public interface CopyObject {
 
     String getName();
 
+    long getLastCopyTime();
 
+    long getTimeToCopy();
 
 }

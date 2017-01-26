@@ -1,4 +1,4 @@
-package CopyingFiles;
+package copyingFiles;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +28,10 @@ public class Journal implements Iterable<CopyObject>,Serializable{
             if(f.getPath()==path)
                 return f;
         return null;
+    }
+
+    public List<CopyObject> getAllCopyFiles(){
+        return copyFiles;
     }
 
     public Iterator iterator(){return copyFiles.iterator();}

@@ -1,8 +1,8 @@
-package CopyingFiles;
+package copyingFiles;
 
-import CopyingFiles.copies.CopyOfFile;
-import Modes.Mode;
-import filesystemprocess.FilesManager;
+import copyingFiles.copies.CopyOfFile;
+import modesOfCopying.Mode;
+import fileSystemProcess.FilesManager;
 
 import java.io.File;
 import java.io.Serializable;
@@ -14,11 +14,37 @@ import java.util.*;
  */
 public class FileCopyObject implements CopyObject,Serializable {
 
-    private long timeToCopy;
     private File file;
     private File copyingFileSource;
     private Mode mode;
     private ArrayList<CopyOfFile> copies;
+    private long timeToCopy;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileCopyObject that = (FileCopyObject) o;
+
+        if (timeToCopy != that.timeToCopy) return false;
+        if (file != null ? !file.equals(that.file) : that.file != null) return false;
+        if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
+            return false;
+        if (mode != that.mode) return false;
+        return copies != null ? copies.equals(that.copies) : that.copies == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (timeToCopy ^ (timeToCopy >>> 32));
+        result = 31 * result + (file != null ? file.hashCode() : 0);
+        result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
+        result = 31 * result + (mode != null ? mode.hashCode() : 0);
+        result = 31 * result + (copies != null ? copies.hashCode() : 0);
+        return result;
+    }
+
 
     public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {
         if (file.exists()) {
@@ -141,4 +167,15 @@ public class FileCopyObject implements CopyObject,Serializable {
     }
 
     public String getName(){ return file.getName(); }
+
+    public long getLastCopyTime(){
+        if(!copies.isEmpty())
+            return copies.get(copies.size()-1).getTimeOfCopy();
+        else
+            return 0;
+    }
+
+    public long getTimeToCopy(){
+        return timeToCopy;
+    }
 }

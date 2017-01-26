@@ -1,12 +1,8 @@
-package CopyingFiles.copies;
+package copyingFiles.copies;
 
-import CopyingFiles.CopyObject;
+import copyingFiles.CopyObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.io.File;
 
 
 /**
