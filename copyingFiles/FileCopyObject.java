@@ -22,33 +22,15 @@ public class FileCopyObject implements CopyObject,Serializable {
     private long timeOfLastAttemption;
 
     public void repairCopies() {
-        boolean[] del = new boolean[copies.size()];
-        for(int i=0;i<del.length;i++){
-            del[i]=false;
-        }
-        for (int i = 0; i < copies.size(); i++)
-            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName()))) {
+        for(int i=0;i<copies.size();i++)
+            if(!new File(copyingFileSource+"\\"+copies.get(i).getNameOfCopyFile()).exists())
                 copies.remove(i);
-                del[i]=true;
-            }
-        int n=0;
-        while(n<del.length){
-            if(del[n]){
-                for(int i=n+1;i<del.length;i++){
-                    if (!del[i]) {
-                        FilesManager.renameCopy(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName()), copyingFileSource + "\\" + "v" + i + "_" + file.getName());
-                        del[i] = true;
-                    }
-                }
-            }
-            n++;
-        }
     }
 
     public boolean checkCopies(){
         boolean res=true;
         for (int i = 0; i < copies.size(); i++)
-            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName()))) {
+            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()))) {
                 res=false;
             }
         return res;
@@ -58,7 +40,7 @@ public class FileCopyObject implements CopyObject,Serializable {
         boolean res = false;
         for(int i=0;i<copies.size();i++)
             if (copies.get(i).getTimeOfCopy()==time)
-                if (FilesManager.copyExists(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName())))
+                if (FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
                     res = true;
         return res;
     }
@@ -66,8 +48,8 @@ public class FileCopyObject implements CopyObject,Serializable {
     public void deleteCopyInTime(long time){
         for(int i=0;i<copies.size();i++)
             if (copies.get(i).getTimeOfCopy()==time) {
-                if (FilesManager.copyExists(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName())))
-                    FilesManager.deleteZipFile(new File(copyingFileSource + "\\" + "v" + (i + 1) + "_" + file.getName()));
+                if (FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
+                    FilesManager.deleteZipFile(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()));
                 copies.remove(i);
             }
     }
