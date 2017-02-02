@@ -7,6 +7,8 @@ import java.io.IOException;
 import copyingFiles.*;
 import dataManager.DataManager;
 import tracking.CopierThread;
+import java.io.File;
+import modesOfCopying.Mode;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class Main {
             copier.start();
             Thread.sleep(10000);
             copier.interrupt();
-            DataManager.getJournal().get(0).upgrade(DataManager.getJournal().get(0).getListOfCopiesTimes().get(1));
+        //    DataManager.getJournal().get(0).upgrade(DataManager.getJournal().get(0).getListOfCopiesTimes().get(1));
             DataManager.saveJournal();
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
