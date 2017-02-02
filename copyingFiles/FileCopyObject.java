@@ -23,7 +23,7 @@ public class FileCopyObject implements CopyObject,Serializable {
 
     public void repairCopies() {
         for(int i=0;i<copies.size();i++)
-            if(!new File(copyingFileSource+"\\"+copies.get(i).getNameOfCopyFile()).exists())
+            if(!FilesManager.copyExists(new File(copyingFileSource+"\\"+copies.get(i).getNameOfCopyFile())))
                 copies.remove(i);
     }
 
@@ -99,7 +99,7 @@ public class FileCopyObject implements CopyObject,Serializable {
         switch (mode) {
             case INC:
                 return (incCopy(timeOfCopy));
-            case DEF:
+            case DIF:
                 return (decCopy(timeOfCopy));
         }
         return false;
@@ -224,4 +224,7 @@ public class FileCopyObject implements CopyObject,Serializable {
     public long getTimeOfLastAttemption(){
         return timeOfLastAttemption;
     }
+
+    public Mode getMode(){return mode;}
+
 }

@@ -1,5 +1,7 @@
 package copyingFiles;
 
+import modesOfCopying.Mode;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,8 @@ public interface CopyObject {
     void repairCopies();
 
     boolean checkCopyInTime(long time);
+
     void deleteCopyInTime(long time);
 
+    Mode getMode();
 }

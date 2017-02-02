@@ -208,4 +208,6 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     public long getTimeOfLastAttemption() {
         return timeOfLastAttemption;
     }
+
+    public Mode getMode(){return mode;}
 }
