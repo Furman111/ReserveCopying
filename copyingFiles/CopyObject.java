@@ -42,4 +42,6 @@ public interface CopyObject {
     void deleteCopyInTime(long time);
 
     Mode getMode();
+
+    String getPathToCopies();
 }

@@ -17,11 +17,12 @@ import java.util.Set;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import util.*;
 
 /**
  * Created by Furman on 02.02.2017.
  */
-public class Window extends JFrame {
+public class MainWindow extends JFrame {
 
     private JMenuItem createNewCopyJMenu;
     private JMenuItem setCopyFolder;
@@ -32,7 +33,7 @@ public class Window extends JFrame {
     private JButton delete;
     private JScrollPane scrollPane;
 
-    public Window() {
+    public MainWindow() {
         super("Резревное копирование");
         setSize(800, 600);
         setResizable(false);
@@ -87,8 +88,11 @@ public class Window extends JFrame {
 
 
         upgrade = new JButton("Восстановить из копии");
+        upgrade.setEnabled(false);
         information = new JButton("Сведения о файле");
+        information.setEnabled(false);
         delete = new JButton("Удалить копирование");
+        delete.setEnabled(true);
 
         add(upgrade);
         add(information);
@@ -160,7 +164,7 @@ public class Window extends JFrame {
                 case 4:
                     return journal.get(rowIndex).getListOfCopiesTimes().size();
                 case 5:
-                    return millisToDate(journal.get(rowIndex).getLastCopyTime());
+                    return TimeOperations.millisToDate(journal.get(rowIndex).getLastCopyTime());
             }
             return "";
         }
@@ -179,12 +183,6 @@ public class Window extends JFrame {
 
     }
 
-    public String millisToDate(long timeInMillis) {
-        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(timeInMillis);
-        return formatter.format(calendar.getTime());
-    }
 
 
     public class eHandler implements ActionListener {

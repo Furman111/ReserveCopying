@@ -210,4 +210,8 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     }
 
     public Mode getMode(){return mode;}
+
+    public String getPathToCopies(){
+        return copyingFileSource.getAbsolutePath();
+    }
 }
