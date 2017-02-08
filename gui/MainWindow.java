@@ -42,6 +42,8 @@ public class MainWindow extends JFrame {
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
         setBackground(Color.WHITE);
+        ImageIcon icon = new ImageIcon("data.png");
+        setIconImage(icon.getImage());
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileJMenu = new JMenu("Файл");
