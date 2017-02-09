@@ -5,6 +5,8 @@ import util.TimeOperations;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Furman on 08.02.2017.
@@ -22,6 +24,7 @@ public class InfoWindow extends JFrame {
     private JLabel copiesTimesLabel;
     private int height;
     private int width;
+    private JButton okButton;
 
     public InfoWindow(CopyObject object) {
         super("Сведения о файле");
@@ -85,16 +88,28 @@ public class InfoWindow extends JFrame {
             }
         }
 
-        height = 120;
+        height = 160;
         if (this.object.getListOfCopiesTimes().size()>0)
             height=height+20+object.getListOfCopiesTimes().size()*10;
         if(this.object.getListOfCopiesTimes().size()>0 && object.isDeleted())
             height+=20;
 
+        okButton = new JButton("Ок");
+        okButton.setFocusPainted(false);
+        okButton.setPreferredSize(new Dimension(100,20));
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+        add(okButton);
+
         setSize(width*7+30,height+60);
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
         ImageIcon icon = new ImageIcon("data.png");

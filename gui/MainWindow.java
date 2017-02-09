@@ -14,9 +14,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+
 import util.*;
 
 /**
@@ -32,6 +36,10 @@ public class MainWindow extends JFrame {
     private JButton information;
     private JButton delete;
     private JScrollPane scrollPane;
+    private Journal journal;
+    private JFrame infoWindow;
+    private JFrame upgradeWindow;
+    private JFrame addWindow;
 
     public MainWindow() {
         super("Резревное копирование");
@@ -63,10 +71,11 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(menuBar);
 
-        Journal d = new Journal();
-        d.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\ewew.txt"), new File("dsdsdsddxasx"), Mode.INC, 20000));
-        d.add(new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400));
-        table = new JTable(new MyTableModel(d));
+        this.journal = new Journal();
+        this.journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\ewew.txt"), new File("dsdsdsddxasx"), Mode.INC, 20000));
+        this.journal.add(new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400));
+        table = new JTable(new MyTableModel(this.journal));
+
         table.setPreferredSize(new Dimension(780, 450));
         table.setBackground(Color.WHITE);
         table.setFillsViewportHeight(true);
@@ -81,12 +90,20 @@ public class MainWindow extends JFrame {
         table.getColumnModel().getColumn(5).setResizable(false);
         table.getTableHeader().setReorderingAllowed(false);
         ListSelectionModel lm = new DefaultListSelectionModel();
-        lm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
+        lm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionModel(lm);
-        scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(780,480));
-        add(scrollPane);
+        table.getSelectionModel().addListSelectionListener(new tableListener());
 
+        DefaultTableCellRenderer r = (DefaultTableCellRenderer) table.getDefaultRenderer(String.class);
+        r.setHorizontalAlignment(JLabel.CENTER);
+        r.setVerticalAlignment(JLabel.CENTER);
+        for (int i = 0; i < table.getColumnCount(); i++)
+            table.getColumnModel().getColumn(i).setCellRenderer(r);
+
+
+        scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(780, 480));
+        add(scrollPane);
 
 
         upgrade = new JButton("Восстановить из копии");
@@ -94,11 +111,62 @@ public class MainWindow extends JFrame {
         information = new JButton("Сведения о файле");
         information.setEnabled(false);
         delete = new JButton("Удалить копирование");
-        delete.setEnabled(true);
+        delete.setEnabled(false);
+        ActionListener buttons = new buttonsActionListener();
+        upgrade.addActionListener(buttons);
+        information.addActionListener(buttons);
+        delete.addActionListener(buttons);
 
         add(upgrade);
         add(information);
         add(delete);
+
+        addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                MainWindow.super.toFront();
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                if (infoWindow != null) {
+                    infoWindow.setState(NORMAL);
+                    infoWindow.toFront();
+                } else if (addWindow != null) {
+                    addWindow.setState(NORMAL);
+                    addWindow.toFront();
+                } else if (upgradeWindow != null) {
+                    upgradeWindow.setState(NORMAL);
+                    upgradeWindow.toFront();
+                }
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
     }
 
     public class MyTableModel implements TableModel {
@@ -185,80 +253,120 @@ public class MainWindow extends JFrame {
 
     }
 
+    public class tableListener implements ListSelectionListener {
+        public void valueChanged(ListSelectionEvent e) {
+            upgrade.setEnabled(true);
+            information.setEnabled(true);
+            delete.setEnabled(true);
+        }
+    }
 
-
-    public class eHandler implements ActionListener {
+    public class buttonsActionListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
 
-             /*   if (e.getSource() == n1) {
-                    if (res.getText().contains("="))
-                            res.setText("");
-                    res.setText(res.getText()+"1");
-                }
-                if (e.getSource() == n2) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"2");
-                }
-                if (e.getSource() == n3) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"3");
-                }
-                if (e.getSource() == n4) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"4");
-                }
-                if (e.getSource() == n5) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"5");
-                }
-                if (e.getSource() == n6) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"6");
-                }
-                if (e.getSource() == n7) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"7");
-                }
-                if (e.getSource() == n8) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"8");
-                }
-                if (e.getSource() == n9) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"9");
-                }
-                if (e.getSource() == n0) {
-                    if (res.getText().contains("="))
-                        res.setText("");
-                    res.setText(res.getText()+"0");
-                }
-                if (e.getSource() == plus) {
-                    if (res.getText().contains("=")) {
-                        res.setText("");
-                    }
-                    else
-                     if(res.getText()!="")
-                         res.setText(res.getText()+" + ");
-                }
-                if (e.getSource() == equal) {
-                    if (!res.getText().contains("=")) {
-                        res.setText(res.getText()+ " = res");
-                    }
-                }*/
+            if (e.getSource() == information) {
+                if (infoWindow == null) {
+                    infoWindow = new InfoWindow(journal.get(table.getSelectedRow()));
+                    infoWindow.setVisible(true);
+                    infoWindow.addWindowListener(new WindowListener() {
+                        @Override
+                        public void windowOpened(WindowEvent e) {
+                            MainWindow.super.setEnabled(false);
+                        }
 
+                        @Override
+                        public void windowClosing(WindowEvent e) {
 
+                        }
+
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            infoWindow = null;
+                            MainWindow.super.setEnabled(true);
+                            MainWindow.super.toFront();
+                        }
+
+                        @Override
+                        public void windowIconified(WindowEvent e) {
+                            MainWindow.super.setState(ICONIFIED);
+                            infoWindow.setState(ICONIFIED);
+                        }
+
+                        @Override
+                        public void windowDeiconified(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
+                            MainWindow.super.toFront();
+                            infoWindow.setState(NORMAL);
+                            infoWindow.setFocusable(true);
+                            infoWindow.toFront();
+                        }
+
+                        @Override
+                        public void windowActivated(WindowEvent e) {
+                        }
+
+                        @Override
+                        public void windowDeactivated(WindowEvent e) {
+
+                        }
+
+                    });
+                }
+            }
+
+            if (e.getSource() == upgrade) {
+                upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()));
+                upgradeWindow.setVisible(true);
+                upgradeWindow.addWindowListener(new WindowListener() {
+                    @Override
+                    public void windowOpened(WindowEvent e) {
+                        MainWindow.super.setEnabled(false);
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+
+                    }
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        upgradeWindow = null;
+                        MainWindow.super.setEnabled(true);
+                        MainWindow.super.toFront();
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+                        MainWindow.super.setState(ICONIFIED);
+                        upgradeWindow.setState(ICONIFIED);
+                    }
+
+                    @Override
+                    public void windowDeiconified(WindowEvent e) {
+                        MainWindow.super.setState(NORMAL);
+                        MainWindow.super.toFront();
+                        upgradeWindow.setState(NORMAL);
+                        upgradeWindow.setFocusable(true);
+                        upgradeWindow.toFront();
+                    }
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowDeactivated(WindowEvent e) {
+
+                    }
+
+                });
+            }
         }
 
 
     }
-
 }
+
+
+

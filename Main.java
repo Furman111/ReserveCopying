@@ -12,11 +12,11 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
-        CopyObject copyObject = new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400);
+/*        CopyObject copyObject = new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400);
         InfoWindow infoWindow = new InfoWindow(copyObject);
-        infoWindow.setVisible(true);
-/*        MainWindow w = new MainWindow();
-        w.setVisible(true);*/
+        infoWindow.setVisible(true);*/
+        MainWindow w = new MainWindow();
+        w.setVisible(true);
         /*try {
 *//*          Journal journal = new Journal();
             journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\ewew.txt"),new File("C:\\Users\\Furman\\Desktop\\test\\to"),Mode.INC,1000));
