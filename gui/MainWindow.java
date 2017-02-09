@@ -8,17 +8,16 @@ import modesOfCopying.Mode;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import util.*;
@@ -43,10 +42,10 @@ public class MainWindow extends JFrame {
 
     public MainWindow() {
         super("Резревное копирование");
-        setSize(800, 600);
+        setSize(800, 590);
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
         setBackground(Color.WHITE);
@@ -58,6 +57,58 @@ public class MainWindow extends JFrame {
 
         createNewCopyJMenu = new JMenuItem("Добавить файл для копирования");
         fileJMenu.add(createNewCopyJMenu);
+        createNewCopyJMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (addWindow == null) {
+                    addWindow = new AddWindow();
+                    addWindow.setVisible(true);
+                    addWindow.addWindowListener(new WindowListener() {
+                        @Override
+                        public void windowOpened(WindowEvent e) {
+                            MainWindow.super.setEnabled(false);
+                        }
+
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            MainWindow.super.toFront();
+                        }
+
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            addWindow = null;
+                            MainWindow.super.setEnabled(true);
+                            MainWindow.super.toFront();
+                        }
+
+                        @Override
+                        public void windowIconified(WindowEvent e) {
+                            MainWindow.super.setState(ICONIFIED);
+                            addWindow.setState(ICONIFIED);
+                        }
+
+                        @Override
+                        public void windowDeiconified(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
+                            MainWindow.super.toFront();
+                            addWindow.setState(NORMAL);
+                            addWindow.setFocusable(true);
+                            addWindow.toFront();
+                        }
+
+                        @Override
+                        public void windowActivated(WindowEvent e) {
+                        }
+
+                        @Override
+                        public void windowDeactivated(WindowEvent e) {
+
+                        }
+
+                    });
+                }
+            }
+        });
 
         setCopyFolder = new JMenuItem("Указать папку для сохранения копий");
         fileJMenu.add(setCopyFolder);
@@ -66,6 +117,19 @@ public class MainWindow extends JFrame {
 
         closeOperation = new JMenuItem("Выйти из программы");
         fileJMenu.add(closeOperation);
+        closeOperation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] options = { "Выйти", "Отмена" };
+                int n = JOptionPane.showOptionDialog(getParent(), "Вы уверены, что хотите выйти?",
+                        "Выход из программы", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if(n==0){
+                    setVisible(false);
+                    System.exit(0);
+                }
+            }
+        });
 
         menuBar.add(fileJMenu);
 
@@ -100,7 +164,6 @@ public class MainWindow extends JFrame {
         for (int i = 0; i < table.getColumnCount(); i++)
             table.getColumnModel().getColumn(i).setCellRenderer(r);
 
-
         scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(780, 480));
         add(scrollPane);
@@ -129,7 +192,14 @@ public class MainWindow extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent e) {
-
+                Object[] options = { "Выйти", "Отмена" };
+                int n = JOptionPane.showOptionDialog(e.getWindow(), "Вы уверены, что хотите выйти?",
+                        "Выход из программы", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if(n==0){
+                    setVisible(false);
+                    System.exit(0);
+                }
             }
 
             @Override
@@ -234,7 +304,10 @@ public class MainWindow extends JFrame {
                 case 4:
                     return journal.get(rowIndex).getListOfCopiesTimes().size();
                 case 5:
-                    return TimeOperations.millisToDate(journal.get(rowIndex).getLastCopyTime());
+                    if (journal.get(rowIndex).getListOfCopiesTimes().size() == 0)
+                        return "-";
+                    else
+                        return TimeOperations.millisToDate(journal.get(rowIndex).getLastCopyTime());
             }
             return "";
         }
@@ -277,7 +350,7 @@ public class MainWindow extends JFrame {
 
                         @Override
                         public void windowClosing(WindowEvent e) {
-
+                            MainWindow.super.toFront();
                         }
 
                         @Override
@@ -326,7 +399,7 @@ public class MainWindow extends JFrame {
 
                     @Override
                     public void windowClosing(WindowEvent e) {
-
+                        MainWindow.super.toFront();
                     }
 
                     @Override
@@ -362,6 +435,12 @@ public class MainWindow extends JFrame {
 
                 });
             }
+            if (e.getSource() == delete) {
+                Object[] options = {"Удалить", "Отмена"};
+                int n = JOptionPane.showOptionDialog(MainWindow.super.getParent(), "Вы уверены, что хотите удалить объект копирования? Безвозвратно будут удалены все созданные копии файла.", "Удалить копирование", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                if (n == 0) journal.delete(table.getSelectedRow());
+            }
+
         }
 
 

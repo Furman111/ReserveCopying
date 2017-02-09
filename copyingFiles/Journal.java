@@ -58,4 +58,5 @@ public class Journal implements Iterable<CopyObject>,Serializable{
 
     public int size(){return copyFiles.size();}
 
+
 }
