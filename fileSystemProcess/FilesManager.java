@@ -85,4 +85,18 @@ public class FilesManager {
         return true;
     }
 
+    public static boolean fileWithPathExists(String path){
+        File temp = new File(path);
+        if (temp.exists()) return true;
+        else
+            return false;
+    }
+
+    public static boolean isDirectory(String path){
+        File temp = new File(path);
+        if(temp.isDirectory()) return true;
+        else
+            return false;
+    }
+
 }
