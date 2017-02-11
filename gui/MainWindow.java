@@ -360,9 +360,9 @@ public class MainWindow extends JFrame {
                 case 2:
                     switch (journal.get(rowIndex).getMode()) {
                         case INC:
-                            return "Инкрементное";
+                            return "Инкременталтный";
                         case DIF:
-                            return "Дифференциальное";
+                            return "Дифференциальный";
                     }
                 case 3:
                     return journal.get(rowIndex).getTimeToCopy() / 1000;
