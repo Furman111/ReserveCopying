@@ -18,24 +18,36 @@ public class DataManager{
                 defaultDirectoryForCopies = (File) in.readObject();
                 return defaultDirectoryForCopies;
             } catch (FileNotFoundException e) {
-                throw new FileNotFoundException("Файл с директорией не найден!");
+                return (new File("Директория по умолчанию не указана!"));
             } catch (IOException e) {
-                throw new IOException("Ошибка при чтении файла с директорией!");
+                return (new File("Директория по умолчанию не указана!"));
             }
             catch (ClassNotFoundException e){
-                throw new ClassCastException("Нестандартное содержание файла с директорией!");
+                return (new File("Директория по умолчанию не указана!"));
             }
         }
         else return defaultDirectoryForCopies;
     }
 
-    public static Journal getJournal() throws FileNotFoundException,IOException,ClassNotFoundException{
+    public static Journal getJournal() throws IOException,ClassNotFoundException{
         if (journal==null) {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(JOURNAL_PATH))) {
                 journal = (Journal) in.readObject();
                 return journal;
             } catch (FileNotFoundException e) {
-                throw new FileNotFoundException("Журнал не найден!");
+                try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(JOURNAL_PATH))) {
+                    journal = new Journal();
+                    out.writeObject(journal);
+                    File file = new File(JOURNAL_PATH);
+                    file.setWritable(true);
+                    file.setReadable(true);
+                    return journal;
+                }catch (FileNotFoundException e1) {
+                    throw new FileNotFoundException("Журнал не найден!");
+                }
+                catch(IOException e1){
+                    throw  new IOException("Не удалось сохранить журнал!");
+                }
             } catch (IOException e) {
                 throw new IOException("Ошибка при чтении журнала!");
             }

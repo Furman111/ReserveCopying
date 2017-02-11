@@ -42,7 +42,7 @@ public class setDefaultDirectoryForCopiesWindow extends JFrame {
         try {
             pathLabel = new JLabel(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.OK_OPTION,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
         }
         pathLabel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
@@ -89,7 +89,7 @@ public class setDefaultDirectoryForCopiesWindow extends JFrame {
                     DataManager.saveDefaultDirectoryForCopies();
                 }
                 catch (Exception exc){
-                    JOptionPane.showConfirmDialog(null,exc.getMessage(),"Ошибка!",JOptionPane.OK_OPTION,JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showConfirmDialog(null,exc.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
                 }
                 dispose();
             }

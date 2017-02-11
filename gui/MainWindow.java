@@ -1,25 +1,19 @@
 package gui;
 
-import copyingFiles.DirectoryCopyObject;
-import copyingFiles.FileCopyObject;
 import copyingFiles.Journal;
-import modesOfCopying.Mode;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
+import dataManager.DataManager;
 import util.*;
 
 /**
@@ -41,7 +35,7 @@ public class MainWindow extends JFrame {
     private JFrame addWindow;
     private JFrame setDefaultDirectoryForCopiesWindow;
 
-    public MainWindow() {
+    public MainWindow(Journal journal) {
         super("Резревное копирование");
         setSize(800, 590);
         setResizable(false);
@@ -62,7 +56,12 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
-                    addWindow = new AddWindow();
+                    try {
+                        addWindow = new AddWindow(getJournal());
+                    }
+                    catch (Exception e1){
+                        JOptionPane.showConfirmDialog(null,e1.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+                    }
                     addWindow.setVisible(true);
                     addWindow.addWindowListener(new WindowListener() {
                         @Override
@@ -99,6 +98,7 @@ public class MainWindow extends JFrame {
 
                         @Override
                         public void windowActivated(WindowEvent e) {
+
                         }
 
                         @Override
@@ -153,6 +153,7 @@ public class MainWindow extends JFrame {
 
                         @Override
                         public void windowActivated(WindowEvent e) {
+
                         }
 
                         @Override
@@ -188,8 +189,7 @@ public class MainWindow extends JFrame {
 
         setJMenuBar(menuBar);
 
-        this.journal = new Journal();
-        this.journal.add(new DirectoryCopyObject(new File("C:\\Users\\FurmanT\\Desktop\\3k2s"), new File("C:\\Users\\FurmanT\\Desktop\\testFolder"), Mode.INC, 20000));
+        this.journal = journal;
         table = new JTable(new MyTableModel(this.journal));
 
         table.setPreferredSize(new Dimension(780, 450));
@@ -249,6 +249,10 @@ public class MainWindow extends JFrame {
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if(n==0){
+                    try {
+                        DataManager.saveJournal();
+                    }
+                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
                     setVisible(false);
                     System.exit(0);
                 }
@@ -281,7 +285,16 @@ public class MainWindow extends JFrame {
 
             @Override
             public void windowActivated(WindowEvent e) {
-
+                if (infoWindow != null) {
+                    infoWindow.setState(NORMAL);
+                    infoWindow.toFront();
+                } else if (addWindow != null) {
+                    addWindow.setState(NORMAL);
+                    addWindow.toFront();
+                } else if (upgradeWindow != null) {
+                    upgradeWindow.setState(NORMAL);
+                    upgradeWindow.toFront();
+                }
             }
 
             @Override
@@ -359,7 +372,7 @@ public class MainWindow extends JFrame {
                     if (journal.get(rowIndex).getListOfCopiesTimes().size() == 0)
                         return "-";
                     else
-                        return TimeOperations.millisToDate(journal.get(rowIndex).getLastCopyTime());
+                        return TimeInMillisParcer.millisToDate(journal.get(rowIndex).getLastCopyTime());
             }
             return "";
         }
@@ -429,6 +442,7 @@ public class MainWindow extends JFrame {
 
                         @Override
                         public void windowActivated(WindowEvent e) {
+
                         }
 
                         @Override
@@ -478,6 +492,7 @@ public class MainWindow extends JFrame {
 
                     @Override
                     public void windowActivated(WindowEvent e) {
+
                     }
 
                     @Override
@@ -497,6 +512,8 @@ public class MainWindow extends JFrame {
 
 
     }
+
+    private Journal getJournal(){ return  journal; }
 }
 
 

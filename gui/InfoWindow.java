@@ -1,7 +1,7 @@
 package gui;
 
 import copyingFiles.CopyObject;
-import util.TimeOperations;
+import util.TimeInMillisParcer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,7 +82,7 @@ public class InfoWindow extends JFrame {
             copiesTimesLabel.setPreferredSize(new Dimension(width*7,20));
             add(copiesTimesLabel);
             for(int i=0;i<this.object.getListOfCopiesTimes().size();i++){
-                JLabel temp = new JLabel(TimeOperations.millisToDate(this.object.getListOfCopiesTimes().get(i)));
+                JLabel temp = new JLabel(TimeInMillisParcer.millisToDate(this.object.getListOfCopiesTimes().get(i)));
                 temp.setPreferredSize(new Dimension(width*7,10));
                 add(temp);
             }

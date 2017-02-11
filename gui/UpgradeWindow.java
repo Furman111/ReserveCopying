@@ -1,7 +1,7 @@
 package gui;
 
 import copyingFiles.CopyObject;
-import util.TimeOperations;
+import util.TimeInMillisParcer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,7 +52,7 @@ public class UpgradeWindow extends JFrame {
         });
 
         for(long time: upgradingObject.getListOfCopiesTimes())
-            timesComboBox.addItem(TimeOperations.millisToDate(time));
+            timesComboBox.addItem(TimeInMillisParcer.millisToDate(time));
 
         chooseButton = new JButton("Восстановить");
         chooseButton.setPreferredSize(new Dimension(140,20));

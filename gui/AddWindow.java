@@ -1,6 +1,5 @@
 package gui;
 
-import copyingFiles.CopyObject;
 import copyingFiles.DirectoryCopyObject;
 import copyingFiles.FileCopyObject;
 import copyingFiles.Journal;
@@ -14,10 +13,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.StringTokenizer;
 
-import fileSystemProcess.*;
 import modesOfCopying.Mode;
+import util.TimeInMillisParcer;
 
 import static modesOfCopying.Mode.DIF;
 import static modesOfCopying.Mode.INC;
@@ -47,8 +45,9 @@ public class AddWindow extends JFrame {
 
     private int height, width;
 
-    public AddWindow() {
+    public AddWindow(Journal journal) {
         super("Добавить новый файл для резервного копирования");
+        this.journal = journal;
         height = 360;
         width = 800;
         setSize(width, height);
@@ -102,7 +101,7 @@ public class AddWindow extends JFrame {
         try {
             copyDirectoryPath = new JLabel(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
         }
-        catch (Exception e){ JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.OK_OPTION,JOptionPane.ERROR_MESSAGE); }
+        catch (Exception e){ JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
         copyDirectoryPath.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 BorderFactory.createEmptyBorder(25, 0, 25, 0)));
@@ -159,13 +158,14 @@ public class AddWindow extends JFrame {
 
         try {
             MaskFormatter format = new MaskFormatter("Недели: ## Дни: ## Часы: ## Минуты: ##");
-            format.setPlaceholderCharacter('_');
+            format.setPlaceholderCharacter('0');
             dateField = new JFormattedTextField(format);
             dateField.setPreferredSize(new Dimension(240, 20));
             dateField.setHorizontalAlignment(SwingConstants.LEFT);
+            format.install(dateField);
             add(dateField);
         } catch (Exception e) {
-            dateField.setText("");
+            JOptionPane.showConfirmDialog(null,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
         }
 
         panel.setPreferredSize(new Dimension(780, 40));
@@ -179,8 +179,13 @@ public class AddWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!FilesManager.fileWithPathExists(filePathLabel.getText())) {
-                    attentionLabel.setText("Выбранного файла для копирования не существует!");
-                    attentionLabel.setVisible(true);
+                    if (filePathLabel.getText()=="Файл не выбран..."){
+                        attentionLabel.setText("Файл для копирования не выбран!");
+                        attentionLabel.setVisible(true);
+                    }else {
+                        attentionLabel.setText("Выбранного файла для копирования не существует!");
+                        attentionLabel.setVisible(true);
+                    }
                 } else if (!FilesManager.fileWithPathExists(copyDirectoryPath.getText())) {
                     attentionLabel.setText("Выбранной директории для сохранения копий не существует!");
                     attentionLabel.setVisible(true);
@@ -190,24 +195,14 @@ public class AddWindow extends JFrame {
                 } else {
                     Mode mode;
 
-                    long timeInMillis = 0;
-                    try {
-                        timeInMillis += Integer.parseInt(dateField.getText(9, 2)) * 604800000;
-                        timeInMillis += Integer.parseInt(dateField.getText(17, 2)) * 86400000;
-                        timeInMillis += Integer.parseInt(dateField.getText(26, 2)) * 3600000;
-                        timeInMillis += Integer.parseInt(dateField.getText(37, 2)) * 1000;
-                    } catch (Exception exc) {
-                    }
-
                     if (modeComboBox.getSelectedIndex() == 0)
                         mode = DIF;
                     else
                         mode = INC;
-                    System.out.println(timeInMillis);
                     if (FilesManager.isDirectory(filePathLabel.getText()))
-                        journal.add(new DirectoryCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, timeInMillis));
+                        journal.add(new DirectoryCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
                     else
-                        journal.add(new FileCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, timeInMillis));
+                        journal.add(new FileCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
                     dispose();
                 }
             }
@@ -221,7 +216,10 @@ public class AddWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 filePathLabel.setText("Файл не выбран...");
-                copyDirectoryPath.setText("Директория не выбрана...");
+                try {
+                    copyDirectoryPath.setText(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
+                }
+                catch (Exception exception){     JOptionPane.showConfirmDialog(null,exception.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);}
                 modeComboBox.setSelectedIndex(0);
                 dateField.setText("");
                 attentionLabel.setVisible(false);
