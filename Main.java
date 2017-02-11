@@ -4,17 +4,27 @@
 
 import copyingFiles.CopyObject;
 import copyingFiles.DirectoryCopyObject;
+import dataManager.DataManager;
 import gui.InfoWindow;
 import gui.MainWindow;
 import modesOfCopying.Mode;
 
+import javax.swing.*;
 import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e){}
 /*        CopyObject copyObject = new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400);
         InfoWindow infoWindow = new InfoWindow(copyObject);
         infoWindow.setVisible(true);*/
+        try {
+            DataManager.saveDefaultDirectoryForCopies(new File("C:\\Users\\FurmanT\\Desktop\\testFolder"));
+        } catch (Exception e) {
+        }
         MainWindow w = new MainWindow();
         w.setVisible(true);
         /*try {

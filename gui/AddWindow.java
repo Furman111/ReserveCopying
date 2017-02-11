@@ -4,6 +4,7 @@ import copyingFiles.CopyObject;
 import copyingFiles.DirectoryCopyObject;
 import copyingFiles.FileCopyObject;
 import copyingFiles.Journal;
+import dataManager.DataManager;
 import fileSystemProcess.FilesManager;
 
 import javax.swing.*;
@@ -98,7 +99,10 @@ public class AddWindow extends JFrame {
         chooseCopyDirectoryLabel.setHorizontalAlignment(SwingConstants.LEFT);
         add(chooseCopyDirectoryLabel);
 
-        copyDirectoryPath = new JLabel("Директория не выбрана...");
+        try {
+            copyDirectoryPath = new JLabel(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
+        }
+        catch (Exception e){ JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.OK_OPTION,JOptionPane.ERROR_MESSAGE); }
         copyDirectoryPath.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 BorderFactory.createEmptyBorder(25, 0, 25, 0)));

@@ -39,6 +39,7 @@ public class MainWindow extends JFrame {
     private JFrame infoWindow;
     private JFrame upgradeWindow;
     private JFrame addWindow;
+    private JFrame setDefaultDirectoryForCopiesWindow;
 
     public MainWindow() {
         super("Резревное копирование");
@@ -110,7 +111,59 @@ public class MainWindow extends JFrame {
             }
         });
 
-        setCopyFolder = new JMenuItem("Указать папку для сохранения копий");
+        setCopyFolder = new JMenuItem("Изменить директорию для сохранения копий");
+        setCopyFolder.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (setDefaultDirectoryForCopiesWindow == null) {
+                    setDefaultDirectoryForCopiesWindow = new setDefaultDirectoryForCopiesWindow();
+                    setDefaultDirectoryForCopiesWindow.setVisible(true);
+                    setDefaultDirectoryForCopiesWindow.addWindowListener(new WindowListener() {
+                        @Override
+                        public void windowOpened(WindowEvent e) {
+                            MainWindow.super.setEnabled(false);
+                        }
+
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            MainWindow.super.toFront();
+                        }
+
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            setDefaultDirectoryForCopiesWindow = null;
+                            MainWindow.super.setEnabled(true);
+                            MainWindow.super.toFront();
+                        }
+
+                        @Override
+                        public void windowIconified(WindowEvent e) {
+                            MainWindow.super.setState(ICONIFIED);
+                            setDefaultDirectoryForCopiesWindow.setState(ICONIFIED);
+                        }
+
+                        @Override
+                        public void windowDeiconified(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
+                            MainWindow.super.toFront();
+                            setDefaultDirectoryForCopiesWindow.setState(NORMAL);
+                            setDefaultDirectoryForCopiesWindow.setFocusable(true);
+                            setDefaultDirectoryForCopiesWindow.toFront();
+                        }
+
+                        @Override
+                        public void windowActivated(WindowEvent e) {
+                        }
+
+                        @Override
+                        public void windowDeactivated(WindowEvent e) {
+
+                        }
+
+                    });
+                }
+            }
+        });
         fileJMenu.add(setCopyFolder);
 
         fileJMenu.addSeparator();
@@ -136,8 +189,7 @@ public class MainWindow extends JFrame {
         setJMenuBar(menuBar);
 
         this.journal = new Journal();
-        this.journal.add(new FileCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\ewew.txt"), new File("dsdsdsddxasx"), Mode.INC, 20000));
-        this.journal.add(new DirectoryCopyObject(new File("C:\\Users\\Furman\\Desktop\\test\\from\\dsasew"), new File("dsdsdsddxasx"), Mode.DIF, 14400));
+        this.journal.add(new DirectoryCopyObject(new File("C:\\Users\\FurmanT\\Desktop\\3k2s"), new File("C:\\Users\\FurmanT\\Desktop\\testFolder"), Mode.INC, 20000));
         table = new JTable(new MyTableModel(this.journal));
 
         table.setPreferredSize(new Dimension(780, 450));
