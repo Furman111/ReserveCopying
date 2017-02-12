@@ -175,10 +175,14 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object[] options = { "Выйти", "Отмена" };
-                int n = JOptionPane.showOptionDialog(getParent(), "Вы уверены, что хотите выйти?",
+                int n = JOptionPane.showOptionDialog(null, "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if(n==0){
+                    try {
+                        DataManager.saveJournal();
+                    }
+                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
                     setVisible(false);
                     System.exit(0);
                 }

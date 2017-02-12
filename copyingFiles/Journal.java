@@ -1,5 +1,7 @@
 package copyingFiles;
 
+import javafx.beans.Observable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,6 +59,8 @@ public class Journal implements Iterable<CopyObject>,Serializable{
     }
 
     public int size(){return copyFiles.size();}
+
+
 
 
 }
