@@ -27,7 +27,7 @@ import static modesOfCopying.Mode.INC;
 /**
  * Created by Furman on 09.02.2017.
  */
-public class AddWindow extends JFrame implements Observable{
+public class AddWindow extends JFrame implements Observable {
 
     private Journal journal;
     private JLabel chooseFileLabel;
@@ -49,7 +49,7 @@ public class AddWindow extends JFrame implements Observable{
 
     private int height, width;
 
-    public AddWindow(Journal journal, Observer o){
+    public AddWindow(Journal journal, Observer o) {
         super("Добавить новый файл для резервного копирования");
         this.journal = journal;
         height = 360;
@@ -104,8 +104,9 @@ public class AddWindow extends JFrame implements Observable{
 
         try {
             copyDirectoryPath = new JLabel(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(this, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
-        catch (Exception e){ JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
         copyDirectoryPath.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 BorderFactory.createEmptyBorder(25, 0, 25, 0)));
@@ -169,7 +170,7 @@ public class AddWindow extends JFrame implements Observable{
             format.install(dateField);
             add(dateField);
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
 
         panel.setPreferredSize(new Dimension(780, 40));
@@ -183,10 +184,10 @@ public class AddWindow extends JFrame implements Observable{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!FilesManager.fileWithPathExists(filePathLabel.getText())) {
-                    if (filePathLabel.getText()=="Файл не выбран..."){
+                    if (filePathLabel.getText() == "Файл не выбран...") {
                         attentionLabel.setText("Файл для копирования не выбран!");
                         attentionLabel.setVisible(true);
-                    }else {
+                    } else {
                         attentionLabel.setText("Выбранного файла для копирования не существует!");
                         attentionLabel.setVisible(true);
                     }
@@ -195,6 +196,9 @@ public class AddWindow extends JFrame implements Observable{
                     attentionLabel.setVisible(true);
                 } else if (filePathLabel.getText().equals(copyDirectoryPath.getText())) {
                     attentionLabel.setText("Директория не может копироваться сама в себя!");
+                    attentionLabel.setVisible(true);
+                } else if (TimeInMillisParcer.parseToTimeInMillis(dateField.getText()) == 0) {
+                    attentionLabel.setText("Введён нулевой интервал копирования!");
                     attentionLabel.setVisible(true);
                 } else {
                     Mode mode;
@@ -223,8 +227,9 @@ public class AddWindow extends JFrame implements Observable{
                 filePathLabel.setText("Файл не выбран...");
                 try {
                     copyDirectoryPath.setText(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
+                } catch (Exception exception) {
+                    JOptionPane.showConfirmDialog(null, exception.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                 }
-                catch (Exception exception){     JOptionPane.showConfirmDialog(null,exception.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);}
                 modeComboBox.setSelectedIndex(0);
                 dateField.setText("");
                 attentionLabel.setVisible(false);
@@ -245,16 +250,16 @@ public class AddWindow extends JFrame implements Observable{
         registerObserver(o);
     }
 
-    public void registerObserver(Observer o){
+    public void registerObserver(Observer o) {
         observers.add(o);
     }
 
-    public void removeObserver(Observer o){
+    public void removeObserver(Observer o) {
         observers.remove(o);
     }
 
-    public void notifyObservers(){
-        for(Observer o: observers)
+    public void notifyObservers() {
+        for (Observer o : observers)
             o.dataChanged();
     }
 

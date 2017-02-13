@@ -73,6 +73,7 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowClosing(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.toFront();
                         }
 
@@ -128,6 +129,7 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowClosing(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.toFront();
                         }
 
@@ -160,7 +162,6 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowDeactivated(WindowEvent e) {
-
                         }
 
                     });
@@ -202,14 +203,17 @@ public class MainWindow extends JFrame implements Observer {
         table.setBackground(Color.WHITE);
         table.setFillsViewportHeight(true);
         table.setColumnSelectionAllowed(false);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(0).setPreferredWidth(40);
         table.getColumnModel().getColumn(0).setResizable(false);
-        table.getColumnModel().getColumn(1).setPreferredWidth(25);
+        table.getColumnModel().getColumn(1).setPreferredWidth(0);
         table.getColumnModel().getColumn(1).setResizable(false);
         table.getColumnModel().getColumn(2).setResizable(false);
+        table.getColumnModel().getColumn(2).setPreferredWidth(35);
         table.getColumnModel().getColumn(3).setResizable(false);
         table.getColumnModel().getColumn(4).setResizable(false);
+        table.getColumnModel().getColumn(4).setPreferredWidth(17);
         table.getColumnModel().getColumn(5).setResizable(false);
+        table.getColumnModel().getColumn(5).setPreferredWidth(38);
         table.getTableHeader().setReorderingAllowed(false);
         ListSelectionModel lm = new DefaultListSelectionModel();
         lm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -371,7 +375,7 @@ public class MainWindow extends JFrame implements Observer {
                             return "Дифференциальный";
                     }
                 case 3:
-                    return journal.get(rowIndex).getTimeToCopy() / 1000;
+                    return TimeInMillisParcer.timeToCopyInMillisToString(journal.get(rowIndex).getTimeToCopy());
                 case 4:
                     return journal.get(rowIndex).getListOfCopiesTimes().size();
                 case 5:
@@ -421,6 +425,7 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowClosing(WindowEvent e) {
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.toFront();
                         }
 
@@ -428,6 +433,7 @@ public class MainWindow extends JFrame implements Observer {
                         public void windowClosed(WindowEvent e) {
                             infoWindow = null;
                             MainWindow.super.setEnabled(true);
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.toFront();
                         }
 
@@ -471,6 +477,7 @@ public class MainWindow extends JFrame implements Observer {
 
                     @Override
                     public void windowClosing(WindowEvent e) {
+                        MainWindow.super.setState(NORMAL);
                         MainWindow.super.toFront();
                     }
 
@@ -478,6 +485,7 @@ public class MainWindow extends JFrame implements Observer {
                     public void windowClosed(WindowEvent e) {
                         upgradeWindow = null;
                         MainWindow.super.setEnabled(true);
+                        MainWindow.super.setState(NORMAL);
                         MainWindow.super.toFront();
                     }
 

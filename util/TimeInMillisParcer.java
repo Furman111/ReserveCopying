@@ -29,4 +29,31 @@ public class TimeInMillisParcer {
         return formatter.format(calendar.getTime());
     }
 
+    public static String timeToCopyInMillisToString(long timeToCopyInMillis){
+        if (timeToCopyInMillis>0) {
+            long temp = timeToCopyInMillis;
+            long weeks = 0, days = 0, hours = 0, minutes = 0;
+            weeks = temp / 604800000;
+            temp = temp % 604800000;
+            days = temp / 86400000;
+            temp = temp % 86400000;
+            hours = temp / 3600000;
+            temp = temp % 3600000;
+            minutes = temp / 60000;
+
+            StringBuilder res = new StringBuilder();
+            if (weeks > 0)
+                res.append(weeks + " нед. ");
+            if (days > 0)
+                res.append(days + " дн. ");
+            if (hours > 0)
+                res.append(hours+" час. ");
+            if (minutes > 0)
+                res.append(minutes + " мин.");
+            return res.toString();
+        }
+        else
+            return "0";
+    }
+
 }
