@@ -11,7 +11,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import observing.*;
 
 import dataManager.DataManager;
 import util.*;
@@ -19,7 +21,7 @@ import util.*;
 /**
  * Created by Furman on 02.02.2017.
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements Observer {
 
     private JMenuItem createNewCopyJMenu;
     private JMenuItem setCopyFolder;
@@ -57,7 +59,7 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
                     try {
-                        addWindow = new AddWindow(getJournal());
+                        addWindow = new AddWindow(getJournal(),MainWindow.this);
                     }
                     catch (Exception e1){
                         JOptionPane.showConfirmDialog(null,e1.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
@@ -510,6 +512,7 @@ public class MainWindow extends JFrame {
                 Object[] options = {"Удалить", "Отмена"};
                 int n = JOptionPane.showOptionDialog(MainWindow.super.getParent(), "Вы уверены, что хотите удалить объект копирования? Безвозвратно будут удалены все созданные копии файла.", "Удалить копирование", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                 if (n == 0) journal.delete(table.getSelectedRow());
+                table.updateUI();
             }
 
         }
@@ -518,6 +521,12 @@ public class MainWindow extends JFrame {
     }
 
     private Journal getJournal(){ return  journal; }
+
+    @Override
+    public void dataChanged() {
+        table.updateUI();
+    }
+
 }
 
 

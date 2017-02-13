@@ -13,8 +13,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 import modesOfCopying.Mode;
+import observing.Observable;
+import observing.Observer;
 import util.TimeInMillisParcer;
 
 import static modesOfCopying.Mode.DIF;
@@ -24,7 +27,7 @@ import static modesOfCopying.Mode.INC;
 /**
  * Created by Furman on 09.02.2017.
  */
-public class AddWindow extends JFrame {
+public class AddWindow extends JFrame implements Observable{
 
     private Journal journal;
     private JLabel chooseFileLabel;
@@ -42,10 +45,11 @@ public class AddWindow extends JFrame {
     private JLabel attentionLabel;
     private JFileChooser fileChooser;
     private JFileChooser copyDirectoryChooser;
+    private ArrayList<Observer> observers;
 
     private int height, width;
 
-    public AddWindow(Journal journal) {
+    public AddWindow(Journal journal, Observer o){
         super("Добавить новый файл для резервного копирования");
         this.journal = journal;
         height = 360;
@@ -203,6 +207,7 @@ public class AddWindow extends JFrame {
                         journal.add(new DirectoryCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
                     else
                         journal.add(new FileCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
+                    notifyObservers();
                     dispose();
                 }
             }
@@ -236,6 +241,21 @@ public class AddWindow extends JFrame {
         attentionLabel.setVisible(false);
         add(attentionLabel);
 
+        observers = new ArrayList<>();
+        registerObserver(o);
+    }
+
+    public void registerObserver(Observer o){
+        observers.add(o);
+    }
+
+    public void removeObserver(Observer o){
+        observers.remove(o);
+    }
+
+    public void notifyObservers(){
+        for(Observer o: observers)
+            o.dataChanged();
     }
 
 }
