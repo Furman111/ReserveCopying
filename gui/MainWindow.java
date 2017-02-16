@@ -520,6 +520,9 @@ public class MainWindow extends JFrame implements Observer {
                 Object[] options = {"Удалить", "Отмена"};
                 int n = JOptionPane.showOptionDialog(MainWindow.super.getParent(), "Вы уверены, что хотите удалить объект копирования? Безвозвратно будут удалены все созданные копии файла.", "Удалить копирование", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                 if (n == 0) journal.delete(table.getSelectedRow());
+                information.setEnabled(false);
+                delete.setEnabled(false);
+                upgrade.setEnabled(false);
                 table.updateUI();
             }
 

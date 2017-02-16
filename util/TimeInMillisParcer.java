@@ -11,14 +11,14 @@ public class TimeInMillisParcer {
 
     public static long parseToTimeInMillis(String str) {
         long res = 0;
-        if (str.charAt(8) != '_') res += Character.getNumericValue(str.charAt(8)) * 10 * 604800000;
-        if (str.charAt(9) != '_') res += Character.getNumericValue(str.charAt(9)) * 604800000;
-        if (str.charAt(16) != '_') res += Character.getNumericValue(str.charAt(16)) * 10 * 86400000;
-        if (str.charAt(17) != '_') res += Character.getNumericValue(str.charAt(17)) * 86400000;
-        if (str.charAt(25) != '_') res += Character.getNumericValue(str.charAt(25)) * 10 * 3600000;
-        if (str.charAt(26) != '_') res += Character.getNumericValue(str.charAt(26)) * 3600000;
-        if (str.charAt(36) != '_') res += Character.getNumericValue(str.charAt(36)) * 10 * 60000;
-        if (str.charAt(37) != '_') res += Character.getNumericValue(str.charAt(37)) * 60000;
+        if (str.charAt(8) != '0') res+=(((long)Character.getNumericValue(str.charAt(8))-(long)Character.getNumericValue('0')) * (long)10 * (long)604800000);
+        if (str.charAt(9) != '0') res += ((long)Character.getNumericValue(str.charAt(9))-(long)Character.getNumericValue('0')) * (long)604800000;
+        if (str.charAt(16) != '0') res += ((long)Character.getNumericValue(str.charAt(16))-(long)Character.getNumericValue('0')) * (long)10 * (long)86400000;
+        if (str.charAt(17) != '0') res += ((long)Character.getNumericValue(str.charAt(17))-(long)Character.getNumericValue('0')) * (long)86400000;
+        if (str.charAt(25) != '0') res += ((long)Character.getNumericValue(str.charAt(25))-(long)Character.getNumericValue('0')) * (long)10 * (long)3600000;
+        if (str.charAt(26) != '0') res += ((long)Character.getNumericValue(str.charAt(26))-(long)Character.getNumericValue('0')) * (long)3600000;
+        if (str.charAt(36) != '0') res += ((long)Character.getNumericValue(str.charAt(36))-(long)Character.getNumericValue('0')) * (long)10 * (long)60000;
+        if (str.charAt(37) != '0') res += ((long)Character.getNumericValue(str.charAt(37))-(long)Character.getNumericValue('0')) * (long)60000;
         return res;
     }
 
