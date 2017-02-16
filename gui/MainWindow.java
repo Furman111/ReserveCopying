@@ -37,6 +37,7 @@ public class MainWindow extends JFrame implements Observer {
     private JFrame addWindow;
     private JFrame setDefaultDirectoryForCopiesWindow;
 
+
     public MainWindow(Journal journal) {
         super("Резревное копирование");
         setSize(800, 590);
@@ -537,6 +538,7 @@ public class MainWindow extends JFrame implements Observer {
     public void dataChanged() {
         table.updateUI();
     }
+
 
 }
 

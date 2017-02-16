@@ -55,6 +55,8 @@ public class FilesManager {
         try {
             ZipFile zipFile = new ZipFile(from.getPath()+".zip");
             Enumeration entries = zipFile.entries();
+            if (to.exists())
+                deleteFile(to);
             while(entries.hasMoreElements()){
                 ZipEntry entry =(ZipEntry) entries.nextElement();
                 write(zipFile.getInputStream(entry), new FileOutputStream(to));

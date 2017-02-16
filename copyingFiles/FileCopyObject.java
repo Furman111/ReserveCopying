@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by Furman on 21.01.2017.
  */
-public class FileCopyObject implements CopyObject,Serializable {
+public class FileCopyObject implements CopyObject, Serializable {
 
     private File file;
     private File copyingFileSource;
@@ -22,32 +22,32 @@ public class FileCopyObject implements CopyObject,Serializable {
     private long timeOfLastAttemption;
 
     public void repairCopies() {
-        for(int i=0;i<copies.size();i++)
-            if(!FilesManager.copyExists(new File(copyingFileSource+"\\"+copies.get(i).getNameOfCopyFile())))
+        for (int i = 0; i < copies.size(); i++)
+            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
                 copies.remove(i);
     }
 
-    public boolean checkCopies(){
-        boolean res=true;
+    public boolean checkCopies() {
+        boolean res = true;
         for (int i = 0; i < copies.size(); i++)
             if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()))) {
-                res=false;
+                res = false;
             }
         return res;
     }
 
-    public boolean checkCopyInTime(long time){
+    public boolean checkCopyInTime(long time) {
         boolean res = false;
-        for(int i=0;i<copies.size();i++)
-            if (copies.get(i).getTimeOfCopy()==time)
+        for (int i = 0; i < copies.size(); i++)
+            if (copies.get(i).getTimeOfCopy() == time)
                 if (FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
                     res = true;
         return res;
     }
 
-    public void deleteCopyInTime(long time){
-        for(int i=0;i<copies.size();i++)
-            if (copies.get(i).getTimeOfCopy()==time) {
+    public void deleteCopyInTime(long time) {
+        for (int i = 0; i < copies.size(); i++)
+            if (copies.get(i).getTimeOfCopy() == time) {
                 if (FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
                     FilesManager.deleteZipFile(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()));
                 copies.remove(i);
@@ -89,7 +89,7 @@ public class FileCopyObject implements CopyObject,Serializable {
             this.mode = mode;
             copies = new ArrayList<>();
             copies.clear();
-            timeOfLastAttemption=0;
+            timeOfLastAttemption = 0;
         } else
             throw new Error("Файл не существует");
     }
@@ -116,18 +116,24 @@ public class FileCopyObject implements CopyObject,Serializable {
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
                     CopyOfFile tempCopy = new CopyOfFile(timeOfCopy, file.lastModified(), false);
-                    File temp = new File(copyingFileSource + "\\" + tempCopy.getNameOfCopyFile());
+                    File temp;
+                    if (copies.size() == 2) {
+                        tempCopy.setNameOfCopyFile(copies.get(copies.size() - 1).getNameOfCopyFile());
+                        temp = new File(copyingFileSource + "\\" + copies.get(copies.size() - 1).getNameOfCopyFile());
+                    } else
+                        temp = new File(copyingFileSource + "\\" + tempCopy.getNameOfCopyFile());
                     res = FilesManager.fileToZipCopy(file, temp);
-                    if (copies.size() == 1)
-                        copies.add(tempCopy);
-                    else
+                    if (copies.size() == 2)
                         copies.set(1, tempCopy);
+                    else
+                        copies.add(tempCopy);
                 }
             }
-        } else if (copies.get(copies.size() - 1).isDeleted())
+        } else if (copies.size() == 3) {
             copies.set(copies.size() - 1, new CopyOfFile(timeOfCopy, timeOfCopy, true));
-        else
+        } else {
             copies.add(new CopyOfFile(timeOfCopy, timeOfCopy, true));
+        }
         return res;
     }
 
@@ -135,13 +141,13 @@ public class FileCopyObject implements CopyObject,Serializable {
         boolean res = true;
         if (file.exists()) {
             if (copies.isEmpty()) {
-                CopyOfFile tempCopy = new  CopyOfFile(timeOfCopy, file.lastModified(), false);
+                CopyOfFile tempCopy = new CopyOfFile(timeOfCopy, file.lastModified(), false);
                 File temp = new File(copyingFileSource + "\\" + tempCopy.getNameOfCopyFile());
                 res = FilesManager.fileToZipCopy(file, temp);
                 copies.add(tempCopy);
             } else {
                 if (file.lastModified() > copies.get(copies.size() - 1).getTimeOfCopy()) {
-                    CopyOfFile tempCopy = new  CopyOfFile(timeOfCopy, file.lastModified(), false);
+                    CopyOfFile tempCopy = new CopyOfFile(timeOfCopy, file.lastModified(), false);
                     File temp = new File(copyingFileSource + "\\" + tempCopy.getNameOfCopyFile());
                     res = FilesManager.fileToZipCopy(file, temp);
                     copies.add(tempCopy);
@@ -196,38 +202,42 @@ public class FileCopyObject implements CopyObject,Serializable {
         return res;
     }
 
-    public boolean isDeleted(){
-        return copies.get(copies.size()-1).isDeleted();
+    public boolean isDeleted() {
+        return copies.get(copies.size() - 1).isDeleted();
     }
 
-    public boolean isFile(){
+    public boolean isFile() {
         return true;
     }
 
-    public boolean isDirectory(){
+    public boolean isDirectory() {
         return false;
     }
 
-    public String getName(){ return file.getName(); }
+    public String getName() {
+        return file.getName();
+    }
 
-    public long getLastCopyTime(){
-        if(!copies.isEmpty())
-            return copies.get(copies.size()-1).getTimeOfCopy();
+    public long getLastCopyTime() {
+        if (!copies.isEmpty())
+            return copies.get(copies.size() - 1).getTimeOfCopy();
         else
             return 0;
     }
 
-    public long getTimeToCopy(){
+    public long getTimeToCopy() {
         return timeToCopy;
     }
 
-    public long getTimeOfLastAttemption(){
+    public long getTimeOfLastAttemption() {
         return timeOfLastAttemption;
     }
 
-    public Mode getMode(){return mode;}
+    public Mode getMode() {
+        return mode;
+    }
 
-    public String getPathToCopies(){
+    public String getPathToCopies() {
         return copyingFileSource.getAbsolutePath();
     }
 }

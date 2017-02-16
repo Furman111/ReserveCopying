@@ -9,6 +9,7 @@ import dataManager.DataManager;
 import gui.InfoWindow;
 import gui.MainWindow;
 import modesOfCopying.Mode;
+import tracking.CopierThread;
 
 import javax.swing.*;
 import java.io.File;
@@ -24,8 +25,12 @@ public class Main {
         try {
             journal = DataManager.getJournal();
         }
-        catch (Exception e){};
+        catch (Exception e){
+            JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }
         MainWindow w = new MainWindow(journal);
+        Thread tracking = new Thread(new CopierThread(journal,w));
+        tracking.start();
         w.setVisible(true);
     }
 }

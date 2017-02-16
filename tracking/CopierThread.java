@@ -16,9 +16,10 @@ public class CopierThread implements Runnable,Observable{
     private int hashCode;
     private List<Observer> observers;
 
-    public CopierThread(Journal journal){
+    public CopierThread(Journal journal,Observer o){
         this.journal = journal;
         this.observers = new ArrayList<>();
+        this.observers.add(o);
         hashCode = 0;
         copyList = new ArrayList<>(journal.getAllCopyFiles());
         this.sort(journal.hashCode());

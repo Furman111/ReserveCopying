@@ -10,22 +10,22 @@ import java.util.List;
 /**
  * Created by Furman on 25.01.2017.
  */
-public class Journal implements Iterable<CopyObject>,Serializable{
+public  class Journal implements Iterable<CopyObject>,Serializable{
     private List<CopyObject> copyFiles;
 
     public Journal(){
         copyFiles = new ArrayList<>();
     }
 
-    public void add(CopyObject copyObject){
+    public synchronized void add(CopyObject copyObject){
         copyFiles.add(copyObject);
     }
 
-    public CopyObject get(int i){
+    public synchronized CopyObject get(int i){
         return copyFiles.get(i);
     }
 
-    public CopyObject getWithPath(String path){
+    public synchronized CopyObject getWithPath(String path){
         for(CopyObject f:copyFiles)
             if(f.getPath()==path)
                 return f;
@@ -33,7 +33,7 @@ public class Journal implements Iterable<CopyObject>,Serializable{
     }
 
     @Override
-    public boolean equals(Object o) {
+    public synchronized boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -43,22 +43,22 @@ public class Journal implements Iterable<CopyObject>,Serializable{
     }
 
     @Override
-    public int hashCode() {
+    public synchronized int hashCode() {
         return copyFiles != null ? copyFiles.hashCode() : 0;
     }
 
-    public List<CopyObject> getAllCopyFiles(){
+    public synchronized List<CopyObject> getAllCopyFiles(){
         return copyFiles;
     }
 
-    public Iterator iterator(){return copyFiles.iterator();}
+    public synchronized Iterator iterator(){return copyFiles.iterator();}
 
-    public void delete(int i){
+    public synchronized void delete(int i){
         copyFiles.get(i).delete();
         copyFiles.remove(i);
     }
 
-    public int size(){return copyFiles.size();}
+    public synchronized int size(){return copyFiles.size();}
 
 
 

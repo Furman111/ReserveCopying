@@ -38,6 +38,14 @@ public class UpgradeWindow extends JFrame {
         timesComboBox.setPreferredSize(new Dimension(200,20));
         add(timesComboBox);
         timesComboBox.setEditable(false);
+
+        chooseButton = new JButton("Восстановить");
+        chooseButton.setPreferredSize(new Dimension(140,20));
+        chooseButton.setFocusPainted(false);
+        chooseButton.setEnabled(false);
+        add(chooseButton);
+
+
         timesComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -46,6 +54,7 @@ public class UpgradeWindow extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         object.upgrade(object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
+                        dispose();
                     }
                 });
             }
@@ -54,11 +63,6 @@ public class UpgradeWindow extends JFrame {
         for(long time: upgradingObject.getListOfCopiesTimes())
             timesComboBox.addItem(TimeInMillisParcer.millisToDate(time));
 
-        chooseButton = new JButton("Восстановить");
-        chooseButton.setPreferredSize(new Dimension(140,20));
-        chooseButton.setFocusPainted(false);
-        chooseButton.setEnabled(false);
-        add(chooseButton);
 
         setSize(460, 120);
         setResizable(false);

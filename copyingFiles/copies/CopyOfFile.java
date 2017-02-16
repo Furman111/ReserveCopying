@@ -60,4 +60,8 @@ public class CopyOfFile implements Serializable {
     public boolean isDeleted() {
         return deleted;
     }
+
+    public void setNameOfCopyFile(String nameOfCopyFile){
+        this.nameOfCopyFile = nameOfCopyFile;
+    }
 }
