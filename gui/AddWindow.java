@@ -61,7 +61,7 @@ public class AddWindow extends JFrame implements Observable {
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         setDefaultLookAndFeelDecorated(true);
-        ImageIcon icon = new ImageIcon("data.png");
+        ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
 
         chooseFileLabel = new JLabel("Выберете файл для резервного копирования:");

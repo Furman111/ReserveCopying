@@ -43,7 +43,7 @@ public class InfoWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
-        ImageIcon icon = new ImageIcon("data.png");
+        ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
 
         pane = new JPanel();

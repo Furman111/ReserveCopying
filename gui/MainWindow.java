@@ -2,19 +2,20 @@ package gui;
 
 import copyingFiles.Journal;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import observing.*;
-
 import dataManager.DataManager;
 import util.*;
 
@@ -47,8 +48,104 @@ public class MainWindow extends JFrame implements Observer {
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
         setBackground(Color.WHITE);
-        ImageIcon icon = new ImageIcon("data.png");
+        ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
+
+        BufferedImage Icon= null;
+        try {
+            Icon = ImageIO.read(new File("trayIcon.png"));
+        }
+        catch (Exception e){}
+        final  TrayIcon trayIcon =  new TrayIcon(Icon, "Резервное копирование");
+
+        SystemTray systemTray = SystemTray.getSystemTray();
+        try {
+            systemTray.add(trayIcon);
+        }
+        catch (Exception e){}
+
+        final PopupMenu popupMenu = new PopupMenu();
+        MenuItem item = new MenuItem("Развернуть");
+        item.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindow.super.setVisible(true);
+                MainWindow.super.setState(NORMAL);
+                toFront();
+                if (infoWindow != null) {
+                    infoWindow.setState(NORMAL);
+                    infoWindow.toFront();
+                } else if (addWindow != null) {
+                    addWindow.setState(NORMAL);
+                    addWindow.toFront();
+                } else if (upgradeWindow != null) {
+                    upgradeWindow.setState(NORMAL);
+                    upgradeWindow.toFront();
+                }
+            }
+        });
+        popupMenu.add(item);
+        popupMenu.addSeparator();
+        MenuItem item2 = new MenuItem("Выйти из программы");
+        item2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object[] options = { "Выйти", "Отмена" };
+                int n = JOptionPane.showOptionDialog(null, "Вы уверены, что хотите выйти?",
+                        "Выход из программы", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if(n==0){
+                    try {
+                        DataManager.saveJournal();
+                    }
+                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
+                    MainWindow.super.setVisible(false);
+                    System.exit(0);
+                }
+            }
+        });
+        popupMenu.add(item2);
+
+        trayIcon.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked (MouseEvent e){
+                if ( SwingUtilities.isRightMouseButton( e )){
+                    trayIcon.setPopupMenu(popupMenu);
+                }
+                else if(SwingUtilities.isLeftMouseButton( e )){
+                    MainWindow.super.setVisible(true);
+                    MainWindow.super.setState(NORMAL);
+                    toFront();
+                    if (setDefaultDirectoryForCopiesWindow!=null){
+                        setDefaultDirectoryForCopiesWindow.setState(NORMAL);
+                        setDefaultDirectoryForCopiesWindow.setVisible(true);
+                        setDefaultDirectoryForCopiesWindow.toFront();
+                        setDefaultDirectoryForCopiesWindow.setFocusable(true);
+                    }
+                    if (infoWindow != null) {
+                        infoWindow.setState(NORMAL);
+                        infoWindow.setVisible(true);
+                        infoWindow.toFront();
+                        infoWindow.setFocusable(true);
+                    } else if (addWindow != null) {
+                        addWindow.setState(NORMAL);
+                        addWindow.setVisible(true);
+                        addWindow.toFront();
+                        addWindow.setFocusable(true);
+                    } else if (upgradeWindow != null) {
+                        upgradeWindow.setState(NORMAL);
+                        upgradeWindow.setVisible(true);
+                        upgradeWindow.toFront();
+                        upgradeWindow.setFocusable(true);
+                    }
+                }
+            }
+        });
+
+
+
+
+
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileJMenu = new JMenu("Файл");
@@ -74,6 +171,7 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowClosing(WindowEvent e) {
+                            addWindow.setVisible(false);
                             MainWindow.super.setState(NORMAL);
                             MainWindow.super.toFront();
                         }
@@ -81,14 +179,15 @@ public class MainWindow extends JFrame implements Observer {
                         @Override
                         public void windowClosed(WindowEvent e) {
                             addWindow = null;
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
                         }
 
                         @Override
                         public void windowIconified(WindowEvent e) {
-                            MainWindow.super.setState(ICONIFIED);
-                            addWindow.setState(ICONIFIED);
+                            MainWindow.super.setVisible(false);
+                            addWindow.setVisible(false);
                         }
 
                         @Override
@@ -143,8 +242,8 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowIconified(WindowEvent e) {
-                            MainWindow.super.setState(ICONIFIED);
-                            setDefaultDirectoryForCopiesWindow.setState(ICONIFIED);
+                            MainWindow.super.setVisible(false);
+                            setVisible(false);
                         }
 
                         @Override
@@ -276,11 +375,13 @@ public class MainWindow extends JFrame implements Observer {
 
             @Override
             public void windowIconified(WindowEvent e) {
-
+                setVisible(false);
             }
 
             @Override
             public void windowDeiconified(WindowEvent e) {
+                setState(NORMAL);
+                toFront();
                 if (infoWindow != null) {
                     infoWindow.setState(NORMAL);
                     infoWindow.toFront();
@@ -291,7 +392,6 @@ public class MainWindow extends JFrame implements Observer {
                     upgradeWindow.setState(NORMAL);
                     upgradeWindow.toFront();
                 }
-
             }
 
             @Override
@@ -440,8 +540,8 @@ public class MainWindow extends JFrame implements Observer {
 
                         @Override
                         public void windowIconified(WindowEvent e) {
-                            MainWindow.super.setState(ICONIFIED);
-                            infoWindow.setState(ICONIFIED);
+                            MainWindow.super.setVisible(false);
+                            setVisible(false);
                         }
 
                         @Override
@@ -492,8 +592,8 @@ public class MainWindow extends JFrame implements Observer {
 
                     @Override
                     public void windowIconified(WindowEvent e) {
-                        MainWindow.super.setState(ICONIFIED);
-                        upgradeWindow.setState(ICONIFIED);
+                        MainWindow.super.setVisible(false);
+                        setVisible(false);
                     }
 
                     @Override

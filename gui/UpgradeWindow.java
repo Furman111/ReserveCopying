@@ -69,7 +69,7 @@ public class UpgradeWindow extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
-        ImageIcon icon = new ImageIcon("data.png");
+        ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
     }
 

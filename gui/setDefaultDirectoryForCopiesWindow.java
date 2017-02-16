@@ -31,7 +31,7 @@ public class setDefaultDirectoryForCopiesWindow extends JFrame {
         setLayout(new FlowLayout());
         setDefaultLookAndFeelDecorated(true);
         setBackground(Color.WHITE);
-        ImageIcon icon = new ImageIcon("data.png");
+        ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
 
         mainLabel = new JLabel("Для выбора директории сохранения копий по умолчанию, нажмите кнопку \"Изменить\":");
