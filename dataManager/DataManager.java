@@ -20,15 +20,15 @@ public class DataManager {
             } catch (FileNotFoundException e) {
                 defaultDirectoryForCopies = new File(System.getProperty("user.home"));
                 saveDefaultDirectoryForCopies();
-                return (defaultDirectoryForCopies);
+                return defaultDirectoryForCopies;
             } catch (IOException e) {
                 defaultDirectoryForCopies = new File(System.getProperty("user.home"));
                 saveDefaultDirectoryForCopies();
-                return (defaultDirectoryForCopies);
+                return defaultDirectoryForCopies;
             } catch (ClassNotFoundException e) {
                 defaultDirectoryForCopies = new File(System.getProperty("user.home"));
                 saveDefaultDirectoryForCopies();
-                return (defaultDirectoryForCopies);
+                return defaultDirectoryForCopies;
             }
         } else return defaultDirectoryForCopies;
     }

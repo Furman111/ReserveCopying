@@ -164,7 +164,7 @@ public class MainWindow extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
                     try {
-                        addWindow = new AddWindow(getJournal(), MainWindow.this);
+                        addWindow = new AddWindow(journal,MainWindow.this::dataChanged);
                     } catch (Exception e1) {
                         JOptionPane.showConfirmDialog(null, e1.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
