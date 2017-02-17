@@ -1,15 +1,15 @@
 package copyingFiles.copies;
 
 import copyingFiles.CopyObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 
 /**
  * Created by Furman on 24.01.2017.
  */
-public class CopyOfDirectory implements Serializable{
+public class CopyOfDirectory implements Serializable {
     private long time;
     private ArrayList<CopyObject> files;
     private boolean deleted;
@@ -34,58 +34,58 @@ public class CopyOfDirectory implements Serializable{
         return result;
     }
 
-    public CopyOfDirectory(long time, ArrayList<CopyObject> files, boolean isDeleted){
+    public CopyOfDirectory(long time, ArrayList<CopyObject> files, boolean isDeleted) {
         this.files = new ArrayList<>();
-        for(int i=0;i<files.size();i++)
-            this.files.add(i,files.get(i));
+        for (int i = 0; i < files.size(); i++)
+            this.files.add(i, files.get(i));
         this.time = time;
-        this.deleted=isDeleted;
+        this.deleted = isDeleted;
 
     }
 
-    public boolean delete(){
-        for(CopyObject j:files)
-            if(!j.delete())
+    public boolean delete() {
+        for (CopyObject j : files)
+            if (!j.delete())
                 return false;
         return true;
     }
 
-    public long getTime(){
+    public long getTime() {
         return time;
     }
 
-    public boolean upgrade(){
-          for(CopyObject j:files)
-              if (!j.upgrade(time))
-                  return false;
-          return true;
+    public boolean upgrade() throws NoSuchElementException {
+        for (CopyObject j : files)
+            if (!j.upgrade(time))
+                return false;
+        return true;
     }
 
-    public boolean copy(long timeOfCopy){
-        for(CopyObject j:files){
-            if(!j.copy(timeOfCopy))
+    public boolean copy(long timeOfCopy) {
+        for (CopyObject j : files) {
+            if (!j.copy(timeOfCopy))
                 return false;
         }
         return true;
     }
 
-    public boolean isDeleted(){
+    public boolean isDeleted() {
         return deleted;
     }
 
-    public boolean check(){
+    public boolean check() {
         boolean res = true;
-        for (int i=0;i<files.size();i++)
+        for (int i = 0; i < files.size(); i++)
             res = files.get(i).checkCopyInTime(time);
         return res;
     }
 
-    public void repair(){
-        for(int i=0;i<files.size();i++)
+    public void repair() {
+        for (int i = 0; i < files.size(); i++)
             files.get(i).deleteCopyInTime(time);
     }
 
-    
+
 }
 
 

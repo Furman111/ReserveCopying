@@ -15,6 +15,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
+
 import observing.*;
 import dataManager.DataManager;
 import util.*;
@@ -51,22 +52,22 @@ public class MainWindow extends JFrame implements Observer {
         ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
 
-        BufferedImage Icon= null;
+        BufferedImage Icon = null;
         try {
             Icon = ImageIO.read(new File("trayIcon.png"));
+        } catch (Exception e) {
         }
-        catch (Exception e){}
-        final  TrayIcon trayIcon =  new TrayIcon(Icon, "Резервное копирование");
+        final TrayIcon trayIcon = new TrayIcon(Icon, "Резервное копирование");
 
         SystemTray systemTray = SystemTray.getSystemTray();
         try {
             systemTray.add(trayIcon);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
 
         final PopupMenu popupMenu = new PopupMenu();
         MenuItem item = new MenuItem("Развернуть");
-        item.addActionListener(new ActionListener(){
+        item.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MainWindow.super.setVisible(true);
@@ -90,15 +91,16 @@ public class MainWindow extends JFrame implements Observer {
         item2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[] options = { "Выйти", "Отмена" };
+                Object[] options = {"Выйти", "Отмена"};
                 int n = JOptionPane.showOptionDialog(null, "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                if(n==0){
+                if (n == 0) {
                     try {
                         DataManager.saveJournal();
+                    } catch (Exception except) {
+                        JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
-                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
                     MainWindow.super.setVisible(false);
                     System.exit(0);
                 }
@@ -106,45 +108,50 @@ public class MainWindow extends JFrame implements Observer {
         });
         popupMenu.add(item2);
 
-        trayIcon.addMouseListener(new MouseAdapter(){
+        trayIcon.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked (MouseEvent e){
-                if ( SwingUtilities.isRightMouseButton( e )){
-                    trayIcon.setPopupMenu(popupMenu);
+            public void mouseClicked(MouseEvent e) {
+                if (!MainWindow.super.isVisible()) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        trayIcon.setPopupMenu(popupMenu);
+                    } else if (SwingUtilities.isLeftMouseButton(e)) {
+                        MainWindow.super.setVisible(true);
+                        MainWindow.super.setState(NORMAL);
+                        toFront();
+                        if (setDefaultDirectoryForCopiesWindow != null) {
+                            setDefaultDirectoryForCopiesWindow.setState(NORMAL);
+                            setDefaultDirectoryForCopiesWindow.setVisible(true);
+                            setDefaultDirectoryForCopiesWindow.toFront();
+                            setDefaultDirectoryForCopiesWindow.setFocusable(true);
+                        }
+                        if (infoWindow != null) {
+                            infoWindow.setState(NORMAL);
+                            infoWindow.setVisible(true);
+                            infoWindow.toFront();
+                            infoWindow.setFocusable(true);
+                        } else if (addWindow != null) {
+                            addWindow.setState(NORMAL);
+                            addWindow.setVisible(true);
+                            addWindow.toFront();
+                            addWindow.setFocusable(true);
+                        } else if (upgradeWindow != null) {
+                            upgradeWindow.setState(NORMAL);
+                            upgradeWindow.setVisible(true);
+                            upgradeWindow.toFront();
+                            upgradeWindow.setFocusable(true);
+                        }
+                    }
                 }
-                else if(SwingUtilities.isLeftMouseButton( e )){
-                    MainWindow.super.setVisible(true);
-                    MainWindow.super.setState(NORMAL);
-                    toFront();
-                    if (setDefaultDirectoryForCopiesWindow!=null){
-                        setDefaultDirectoryForCopiesWindow.setState(NORMAL);
-                        setDefaultDirectoryForCopiesWindow.setVisible(true);
-                        setDefaultDirectoryForCopiesWindow.toFront();
-                        setDefaultDirectoryForCopiesWindow.setFocusable(true);
-                    }
-                    if (infoWindow != null) {
-                        infoWindow.setState(NORMAL);
-                        infoWindow.setVisible(true);
-                        infoWindow.toFront();
-                        infoWindow.setFocusable(true);
-                    } else if (addWindow != null) {
-                        addWindow.setState(NORMAL);
-                        addWindow.setVisible(true);
-                        addWindow.toFront();
-                        addWindow.setFocusable(true);
-                    } else if (upgradeWindow != null) {
-                        upgradeWindow.setState(NORMAL);
-                        upgradeWindow.setVisible(true);
-                        upgradeWindow.toFront();
-                        upgradeWindow.setFocusable(true);
-                    }
+                else
+                {
+                    MainWindow.super.setVisible(false);
+                    if(upgradeWindow!=null) upgradeWindow.setVisible(false);
+                    if(addWindow!=null) addWindow.setVisible(false);
+                    if(infoWindow!=null) infoWindow.setVisible(false);
+                    if(setDefaultDirectoryForCopiesWindow!=null) setDefaultDirectoryForCopiesWindow.setVisible(false);
                 }
             }
         });
-
-
-
-
 
 
         JMenuBar menuBar = new JMenuBar();
@@ -157,10 +164,9 @@ public class MainWindow extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
                     try {
-                        addWindow = new AddWindow(getJournal(),MainWindow.this);
-                    }
-                    catch (Exception e1){
-                        JOptionPane.showConfirmDialog(null,e1.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+                        addWindow = new AddWindow(getJournal(), MainWindow.this);
+                    } catch (Exception e1) {
+                        JOptionPane.showConfirmDialog(null, e1.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
                     addWindow.setVisible(true);
                     addWindow.addWindowListener(new WindowListener() {
@@ -277,15 +283,16 @@ public class MainWindow extends JFrame implements Observer {
         closeOperation.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Object[] options = { "Выйти", "Отмена" };
+                Object[] options = {"Выйти", "Отмена"};
                 int n = JOptionPane.showOptionDialog(null, "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                if(n==0){
+                if (n == 0) {
                     try {
                         DataManager.saveJournal();
+                    } catch (Exception except) {
+                        JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
-                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
                     setVisible(false);
                     System.exit(0);
                 }
@@ -354,15 +361,17 @@ public class MainWindow extends JFrame implements Observer {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                Object[] options = { "Выйти", "Отмена" };
+                Object[] options = {"Выйти", "Отмена"};
                 int n = JOptionPane.showOptionDialog(e.getWindow(), "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                if(n==0){
+                if (n == 0) {
                     try {
                         DataManager.saveJournal();
+                        DataManager.saveDefaultDirectoryForCopies();
+                    } catch (Exception except) {
+                        JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
-                    catch (Exception except){ JOptionPane.showConfirmDialog(null,except.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE); }
                     setVisible(false);
                     System.exit(0);
                 }
@@ -632,7 +641,9 @@ public class MainWindow extends JFrame implements Observer {
 
     }
 
-    private Journal getJournal(){ return  journal; }
+    private Journal getJournal() {
+        return journal;
+    }
 
     @Override
     public void dataChanged() {

@@ -3,11 +3,11 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfDirectory;
 import modesOfCopying.*;
 import fileSystemProcess.FilesManager;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Furman on 21.01.2017.
@@ -29,6 +29,11 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
         } else
             for (int i = 0; i < copies.size(); i++)
                 if (!copies.get(i).check()) {
+                    if (i == copies.size() - 1)
+                        if (copies.size() > 1)
+                            timeOfLastAttemption = copies.get(i - 1).getTime();
+                        else
+                            timeOfLastAttemption = 0;
                     copies.get(i).repair();
                     copies.remove(i);
                 }
@@ -124,7 +129,9 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
         return (FilesManager.deleteFile(temp));
     }
 
-    public boolean upgrade(long time) {
+    public boolean upgrade(long time) throws NoSuchElementException {
+        if (!this.checkCopyInTime(time))
+            throw new NoSuchElementException();
         FilesManager.deleteFile(file);
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
         if (!file.exists()) FilesManager.copyFileFromTo(temp, file);
@@ -209,9 +216,11 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
         return timeOfLastAttemption;
     }
 
-    public Mode getMode(){return mode;}
+    public Mode getMode() {
+        return mode;
+    }
 
-    public String getPathToCopies(){
+    public String getPathToCopies() {
         return copyingFileSource.getAbsolutePath();
     }
 }

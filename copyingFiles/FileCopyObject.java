@@ -3,7 +3,6 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfFile;
 import modesOfCopying.Mode;
 import fileSystemProcess.FilesManager;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
@@ -23,8 +22,14 @@ public class FileCopyObject implements CopyObject, Serializable {
 
     public void repairCopies() {
         for (int i = 0; i < copies.size(); i++)
-            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile())))
-                copies.remove(i);
+            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()))) {
+                if (i == copies.size() - 1)
+                    if (copies.size() > 1)
+                        timeOfLastAttemption = copies.get(i - 1).getTimeOfCopy();
+                    else
+                        timeOfLastAttemption = 0;
+                        copies.remove(i);
+            }
     }
 
     public boolean checkCopies() {
@@ -172,13 +177,18 @@ public class FileCopyObject implements CopyObject, Serializable {
         return res;
     }
 
-    public boolean upgrade(long time) {
+    public boolean upgrade(long time) throws NoSuchElementException {
+        if (!this.checkCopyInTime(time))
+            throw new NoSuchElementException();
         for (int i = 0; i < copies.size(); i++) {
-            if (copies.get(i).getTimeOfCopy() == time)
+            if (copies.get(i).getTimeOfCopy() == time) {
+                FilesManager.deleteFile(file);
                 if (!copies.get(i).isDeleted()) {
                     File temp = new File(copyingFileSource.getPath() + "\\" + copies.get(i).getNameOfCopyFile());
                     return FilesManager.zipToFileCopy(temp, file);
                 }
+                return true;
+            }
         }
         return false;
     }

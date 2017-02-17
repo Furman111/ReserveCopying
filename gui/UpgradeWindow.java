@@ -2,13 +2,15 @@ package gui;
 
 import copyingFiles.CopyObject;
 import util.TimeInMillisParcer;
-
+import javax.management.OperationsException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.*;
+
 
 /**
  * Created by Furman on 09.02.2017.
@@ -53,8 +55,20 @@ public class UpgradeWindow extends JFrame {
                 chooseButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        object.upgrade(object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
-                        dispose();
+                        try {
+                            if(!object.upgrade(object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex())))
+                                throw new OperationsException();
+                        }
+                        catch (NoSuchElementException e1){
+                            upgradingObject.repairCopies();
+                            JOptionPane.showConfirmDialog(null, "Копия файла была удалена или повреждена!", "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                        }
+                        catch (OperationsException e2){
+                            JOptionPane.showConfirmDialog(null, "Операция восстановления не может быть выполнена! "+e2.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                        }
+                        finally {
+                            dispose();
+                        }
                     }
                 });
             }

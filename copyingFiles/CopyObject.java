@@ -1,7 +1,6 @@
 package copyingFiles;
 
 import modesOfCopying.Mode;
-
 import java.util.List;
 
 /**

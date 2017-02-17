@@ -5,7 +5,6 @@ import copyingFiles.FileCopyObject;
 import copyingFiles.Journal;
 import dataManager.DataManager;
 import fileSystemProcess.FilesManager;
-
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.MaskFormatter;
@@ -14,12 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-
 import modesOfCopying.Mode;
 import observing.Observable;
 import observing.Observer;
 import util.TimeInMillisParcer;
-
 import static modesOfCopying.Mode.DIF;
 import static modesOfCopying.Mode.INC;
 
@@ -86,7 +83,11 @@ public class AddWindow extends JFrame implements Observable {
         fileChooserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser = new JFileChooser();
+                String path;
+                if (filePathLabel.getText() != "Файл не выбран...")
+                    fileChooser = new JFileChooser(filePathLabel.getText());
+                else
+                    fileChooser = new JFileChooser();
                 fileChooser.setApproveButtonText("Выбрать");
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 int ret = fileChooser.showDialog(null, "Выбрать файл для копирования");
@@ -123,7 +124,7 @@ public class AddWindow extends JFrame implements Observable {
         copyDirectoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                copyDirectoryChooser = new JFileChooser();
+                copyDirectoryChooser = new JFileChooser(copyDirectoryPath.getText());
                 copyDirectoryChooser.setApproveButtonText("Выбрать");
                 copyDirectoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int ret = copyDirectoryChooser.showDialog(null, "Выбрать директорию для сохранения копий");

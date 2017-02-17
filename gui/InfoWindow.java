@@ -1,10 +1,7 @@
 package gui;
 
 import copyingFiles.CopyObject;
-import javafx.geometry.VerticalDirection;
-import observing.Observer;
 import util.TimeInMillisParcer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
