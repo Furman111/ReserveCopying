@@ -1,6 +1,7 @@
 package copyingFiles.copies;
 
 import copyingFiles.CopyObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -40,7 +41,6 @@ public class CopyOfDirectory implements Serializable {
             this.files.add(i, files.get(i));
         this.time = time;
         this.deleted = isDeleted;
-
     }
 
     public boolean delete() {
@@ -54,7 +54,7 @@ public class CopyOfDirectory implements Serializable {
         return time;
     }
 
-    public boolean upgrade() throws NoSuchElementException {
+    public boolean upgrade(){
         for (CopyObject j : files)
             if (!j.upgrade(time))
                 return false;
@@ -76,7 +76,8 @@ public class CopyOfDirectory implements Serializable {
     public boolean check() {
         boolean res = true;
         for (int i = 0; i < files.size(); i++)
-            res = files.get(i).checkCopyInTime(time);
+            if (!files.get(i).checkCopyInTime(time))
+                res = false;
         return res;
     }
 

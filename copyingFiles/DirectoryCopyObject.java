@@ -3,6 +3,7 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfDirectory;
 import modesOfCopying.*;
 import fileSystemProcess.FilesManager;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     public void repairCopies() {
         if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists())) {
             copies.clear();
+            timeOfLastAttemption = 0;
         } else
             for (int i = 0; i < copies.size(); i++)
                 if (!copies.get(i).check()) {
@@ -41,11 +43,13 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
 
     public boolean checkCopies() {
         boolean res = true;
-        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists()))
+        if (!new File(copyingFileSource.getPath() + "\\" + file.getName()).exists())
             return false;
         else
-            for (int i = 0; i < copies.size(); i++)
-                res = copies.get(i).check();
+            for (int i = 0; i < copies.size(); i++) {
+                if (!copies.get(i).check())
+                    res = false;
+            }
         return res;
     }
 
@@ -132,17 +136,15 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     public boolean upgrade(long time) throws NoSuchElementException {
         if (!this.checkCopyInTime(time))
             throw new NoSuchElementException();
+
         FilesManager.deleteFile(file);
         File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
         if (!file.exists()) FilesManager.copyFileFromTo(temp, file);
-        int i = 0;
-        while ((i < copies.size()) && (time != copies.get(i).getTime())) i++;
-        if (i < copies.size()) return copies.get(i).upgrade();
-        else {
-            System.out.println(copies.size());
-            System.out.println("i = " + i);
-            return false;
+        for (int i = 0; i < copies.size(); i++) {
+            if (copies.get(i).getTime() == time)
+                return copies.get(i).upgrade();
         }
+        return false;
     }
 
     public String getPath() {

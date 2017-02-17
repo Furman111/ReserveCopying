@@ -30,6 +30,13 @@ public class Main {
         MainWindow mainWindow = new MainWindow(journal);
         Thread tracking = new Thread(new CopierThread(journal,mainWindow));
         tracking.start();
-        mainWindow.setVisible(true);
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                mainWindow.setVisible(true);
+            }
+        });
+
+
     }
 }

@@ -4,6 +4,7 @@ package dataManager; /**
 
 import copyingFiles.Journal;
 
+import javax.swing.*;
 import java.io.*;
 
 public class DataManager {
@@ -17,20 +18,14 @@ public class DataManager {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
                 defaultDirectoryForCopies = (File) in.readObject();
                 return defaultDirectoryForCopies;
-            } catch (FileNotFoundException e) {
-                defaultDirectoryForCopies = new File(System.getProperty("user.home"));
-                saveDefaultDirectoryForCopies();
-                return defaultDirectoryForCopies;
-            } catch (IOException e) {
-                defaultDirectoryForCopies = new File(System.getProperty("user.home"));
-                saveDefaultDirectoryForCopies();
-                return defaultDirectoryForCopies;
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
                 defaultDirectoryForCopies = new File(System.getProperty("user.home"));
                 saveDefaultDirectoryForCopies();
                 return defaultDirectoryForCopies;
             }
-        } else return defaultDirectoryForCopies;
+        } else {
+            return defaultDirectoryForCopies;
+        }
     }
 
     public static Journal getJournal() throws IOException, ClassNotFoundException {
@@ -91,6 +86,12 @@ public class DataManager {
 
     public static void setDefaultDirectoryForCopies(File file) {
         DataManager.defaultDirectoryForCopies = file;
+        try{
+            saveDefaultDirectoryForCopies();
+        }
+        catch (IOException e){
+            JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }

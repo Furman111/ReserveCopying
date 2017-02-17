@@ -368,7 +368,6 @@ public class MainWindow extends JFrame implements Observer {
                 if (n == 0) {
                     try {
                         DataManager.saveJournal();
-                        DataManager.saveDefaultDirectoryForCopies();
                     } catch (Exception except) {
                         JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
