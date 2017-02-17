@@ -76,7 +76,6 @@ public class DataManager {
     }
 
     public static void saveDefaultDirectoryForCopies() throws IOException {
-        if (defaultDirectoryForCopies != null) {
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
                 out.writeObject(defaultDirectoryForCopies);
                 File file = new File(FILE_PATH);
@@ -87,9 +86,8 @@ public class DataManager {
             } catch (IOException e) {
                 throw new IOException("Не удалось сохранить стандартную директорию для сохранения копий!");
             }
-        } else
-            throw new IOException("Стандартная директория для сохранения копий не была загружена!");
-    }
+        }
+
 
     public static void setDefaultDirectoryForCopies(File file) {
         DataManager.defaultDirectoryForCopies = file;
