@@ -1,5 +1,6 @@
 package gui;
 
+import copyingFiles.CopyObject;
 import copyingFiles.Journal;
 
 import javax.imageio.ImageIO;
@@ -38,6 +39,7 @@ public class MainWindow extends JFrame implements Observer {
     private JFrame upgradeWindow;
     private JFrame addWindow;
     private JFrame setDefaultDirectoryForCopiesWindow;
+    private CopyObject copyingNow;
 
 
     public MainWindow(Journal journal) {
@@ -512,9 +514,11 @@ public class MainWindow extends JFrame implements Observer {
 
     public class tableListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
-            upgrade.setEnabled(true);
-            information.setEnabled(true);
-            delete.setEnabled(true);
+            if(journal.get(table.getSelectedRow())!=copyingNow) {
+                upgrade.setEnabled(true);
+                information.setEnabled(true);
+                delete.setEnabled(true);
+            }
         }
     }
 
@@ -647,6 +651,24 @@ public class MainWindow extends JFrame implements Observer {
     @Override
     public void dataChanged() {
         table.updateUI();
+    }
+
+    public void setCopyingObject(CopyObject object){
+        this.copyingNow = object;
+        if (journal.get(table.getSelectedRow())==object){
+            upgrade.setEnabled(false);
+            information.setEnabled(false);
+            delete.setEnabled(false);
+        }
+    }
+
+    public void cancelCopyingNow(){
+        if (journal.get(table.getSelectedRow())==copyingNow){
+            upgrade.setEnabled(true);
+            information.setEnabled(true);
+            delete.setEnabled(true);
+        }
+        this.copyingNow = null;
     }
 
 
