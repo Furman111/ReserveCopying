@@ -1,14 +1,12 @@
 package gui;
 
 import copyingFiles.CopyObject;
+import util.SynchronizedOperations;
 import util.TimeInMillisParcer;
 import javax.management.OperationsException;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.*;
 
 
@@ -22,10 +20,15 @@ public class UpgradeWindow extends JFrame {
     private JLabel timeLabel;
     private JComboBox<String> timesComboBox;
     private JButton chooseButton;
+    private SynchronizedOperations operator;
+    private ProcessingWindow processingWindow;
 
-    public UpgradeWindow(CopyObject upgradingObject){
+    public UpgradeWindow(CopyObject upgradingObject,SynchronizedOperations operator){
         super("Восстановить "+upgradingObject.getName());
         object = upgradingObject;
+        processingWindow = null;
+
+        this.operator = operator;
 
         chooseLabel = new JLabel("Выберите время состояния файла, которое вы хотите восстановить:");
         chooseLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -56,17 +59,19 @@ public class UpgradeWindow extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
-                            if(!object.upgrade(object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex())))
-                                throw new OperationsException();
+                            setVisible(false);
+                            processingWindow = new ProcessingWindow("Восстановление", "Файл восстанавливается...");
+                            processingWindow.setVisible(true);
+                            operator.upgrade(object,object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
+                            processingWindow.setVisible(false);
                         }
                         catch (NoSuchElementException e1){
+                            processingWindow.setVisible(false);
                             upgradingObject.repairCopies();
                             JOptionPane.showConfirmDialog(null, "Копия файла была удалена или повреждена!", "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                         }
-                        catch (OperationsException e2){
-                            JOptionPane.showConfirmDialog(null, "Операция восстановления не может быть выполнена! "+e2.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                        }
                         finally {
+                            processingWindow = null;
                             dispose();
                         }
                     }

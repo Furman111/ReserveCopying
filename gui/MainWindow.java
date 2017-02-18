@@ -39,10 +39,10 @@ public class MainWindow extends JFrame implements Observer {
     private JFrame upgradeWindow;
     private JFrame addWindow;
     private JFrame setDefaultDirectoryForCopiesWindow;
-    private CopyObject copyingNow;
+    private SynchronizedOperations operator;
 
 
-    public MainWindow(Journal journal) {
+    public MainWindow(Journal journal, SynchronizedOperations operator) {
         super("Резревное копирование");
         setSize(800, 590);
         setResizable(false);
@@ -53,6 +53,8 @@ public class MainWindow extends JFrame implements Observer {
         setBackground(Color.WHITE);
         ImageIcon icon = new ImageIcon("Icon.png");
         setIconImage(icon.getImage());
+
+        this.operator = operator;
 
         BufferedImage Icon = null;
         try {
@@ -166,7 +168,7 @@ public class MainWindow extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
                     try {
-                        addWindow = new AddWindow(journal,MainWindow.this::dataChanged);
+                        addWindow = new AddWindow(journal,MainWindow.this::dataChanged,operator);
                     } catch (Exception e1) {
                         JOptionPane.showConfirmDialog(null, e1.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
@@ -296,7 +298,7 @@ public class MainWindow extends JFrame implements Observer {
                         JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
                     setVisible(false);
-                    System.exit(0);
+                    operator.exit();
                 }
             }
         });
@@ -374,7 +376,7 @@ public class MainWindow extends JFrame implements Observer {
                         JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
                     setVisible(false);
-                    System.exit(0);
+                    operator.exit();
                 }
             }
 
@@ -514,11 +516,9 @@ public class MainWindow extends JFrame implements Observer {
 
     public class tableListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
-            if(journal.get(table.getSelectedRow())!=copyingNow) {
                 upgrade.setEnabled(true);
                 information.setEnabled(true);
                 delete.setEnabled(true);
-            }
         }
     }
 
@@ -580,7 +580,7 @@ public class MainWindow extends JFrame implements Observer {
             }
 
             if (e.getSource() == upgrade) {
-                upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()));
+                upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()),operator);
                 upgradeWindow.setVisible(true);
                 upgradeWindow.addWindowListener(new WindowListener() {
                     @Override
@@ -632,16 +632,20 @@ public class MainWindow extends JFrame implements Observer {
             if (e.getSource() == delete) {
                 Object[] options = {"Удалить", "Отмена"};
                 int n = JOptionPane.showOptionDialog(MainWindow.super.getParent(), "Вы уверены, что хотите удалить объект копирования? Безвозвратно будут удалены все созданные копии файла.", "Удалить копирование", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                if (n == 0) journal.delete(table.getSelectedRow());
-                information.setEnabled(false);
-                delete.setEnabled(false);
-                upgrade.setEnabled(false);
-                table.updateUI();
+                if (n == 0) {
+                    ProcessingWindow processingWindow = new ProcessingWindow("Удаление", "Созданные копии удаляются...");
+                    MainWindow.super.setEnabled(false);
+                    processingWindow.setVisible(true);
+                    operator.delete(journal.get(table.getSelectedRow()));
+                    processingWindow.dispose();
+                    MainWindow.super.setEnabled(true);
+                    information.setEnabled(false);
+                    delete.setEnabled(false);
+                    upgrade.setEnabled(false);
+                    table.updateUI();
+                }
             }
-
         }
-
-
     }
 
     private Journal getJournal() {
@@ -652,25 +656,6 @@ public class MainWindow extends JFrame implements Observer {
     public void dataChanged() {
         table.updateUI();
     }
-
-    public void setCopyingObject(CopyObject object){
-        this.copyingNow = object;
-        if (table.getSelectedRow()>-1 &&  journal.get(table.getSelectedRow())==object){
-            upgrade.setEnabled(false);
-            information.setEnabled(false);
-            delete.setEnabled(false);
-        }
-    }
-
-    public void cancelCopyingNow(){
-        if ((table.getSelectedRow()>-1) && (journal.get(table.getSelectedRow())==copyingNow)){
-            upgrade.setEnabled(true);
-            information.setEnabled(true);
-            delete.setEnabled(true);
-        }
-        this.copyingNow = null;
-    }
-
 
 }
 

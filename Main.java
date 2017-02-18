@@ -7,6 +7,8 @@ import copyingFiles.Journal;
 import dataManager.DataManager;
 import gui.MainWindow;
 import tracking.CopierThread;
+import util.SynchronizedOperations;
+
 import javax.swing.*;
 
 
@@ -28,9 +30,11 @@ public class Main {
         }
         journal.repairCopies();
 
-        MainWindow mainWindow = new MainWindow(journal);
+        SynchronizedOperations operator = new SynchronizedOperations(journal);
 
-        Thread tracking = new Thread(new CopierThread(journal,mainWindow));
+        MainWindow mainWindow = new MainWindow(journal,operator);
+
+        Thread tracking = new Thread(new CopierThread(journal,mainWindow,operator));
         tracking.start();
 
         java.awt.EventQueue.invokeLater(new Runnable() {

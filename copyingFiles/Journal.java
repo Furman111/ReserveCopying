@@ -8,30 +8,23 @@ import java.util.List;
 /**
  * Created by Furman on 25.01.2017.
  */
-public  class Journal implements Iterable<CopyObject>,Serializable{
+public class Journal implements Iterable<CopyObject>, Serializable {
     private List<CopyObject> copyFiles;
 
-    public Journal(){
+    public Journal() {
         copyFiles = new ArrayList<>();
     }
 
-    public synchronized void add(CopyObject copyObject){
+    public synchronized void add(CopyObject copyObject) {
         copyFiles.add(copyObject);
     }
 
-    public synchronized CopyObject get(int i){
+    public CopyObject get(int i) {
         return copyFiles.get(i);
     }
 
-    public synchronized CopyObject getWithPath(String path){
-        for(CopyObject f:copyFiles)
-            if(f.getPath()==path)
-                return f;
-        return null;
-    }
-
     @Override
-    public synchronized boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
@@ -45,22 +38,30 @@ public  class Journal implements Iterable<CopyObject>,Serializable{
         return copyFiles != null ? copyFiles.hashCode() : 0;
     }
 
-    public synchronized List<CopyObject> getAllCopyFiles(){
+    public List<CopyObject> getAllCopyFiles() {
         return copyFiles;
     }
 
-    public synchronized Iterator iterator(){return copyFiles.iterator();}
-
-    public synchronized void delete(int i){
-        copyFiles.get(i).delete();
-        copyFiles.remove(i);
+    public Iterator iterator() {
+        return copyFiles.iterator();
     }
 
-    public synchronized int size(){return copyFiles.size();}
+    public int size() {
+        return copyFiles.size();
+    }
 
-    public synchronized void repairCopies(){
-        for(CopyObject copyObject: copyFiles)
+    public synchronized void repairCopies() {
+        for (CopyObject copyObject : copyFiles)
             copyObject.repairCopies();
+    }
+
+    public CopyObject get(CopyObject object) {
+        return copyFiles.get(copyFiles.indexOf(object));
+    }
+
+    public synchronized void delete(CopyObject object) {
+        this.get(object).delete();
+        copyFiles.remove(object);
     }
 
 }

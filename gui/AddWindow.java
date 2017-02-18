@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import modesOfCopying.Mode;
 import observing.Observable;
 import observing.Observer;
+import util.SynchronizedOperations;
 import util.TimeInMillisParcer;
 import static modesOfCopying.Mode.DIF;
 import static modesOfCopying.Mode.INC;
@@ -43,10 +44,11 @@ public class AddWindow extends JFrame implements Observable {
     private JFileChooser fileChooser;
     private JFileChooser copyDirectoryChooser;
     private ArrayList<Observer> observers;
+    private SynchronizedOperations operator;
 
     private int height, width;
 
-    public AddWindow(Journal journal, Observer o) {
+    public AddWindow(Journal journal, Observer o, SynchronizedOperations operator) {
         super("Добавить новый файл для резервного копирования");
         this.journal = journal;
         height = 360;
@@ -56,6 +58,8 @@ public class AddWindow extends JFrame implements Observable {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        this.operator = operator;
 
         setDefaultLookAndFeelDecorated(true);
         ImageIcon icon = new ImageIcon("Icon.png");
@@ -209,9 +213,9 @@ public class AddWindow extends JFrame implements Observable {
                     else
                         mode = INC;
                     if (FilesManager.isDirectory(filePathLabel.getText()))
-                        journal.add(new DirectoryCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
+                        operator.addCopyObject(new DirectoryCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
                     else
-                        journal.add(new FileCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
+                        operator.addCopyObject(new FileCopyObject(new File(filePathLabel.getText()), new File(copyDirectoryPath.getText()), mode, TimeInMillisParcer.parseToTimeInMillis(dateField.getText())));
                     notifyObservers();
                     dispose();
                 }
