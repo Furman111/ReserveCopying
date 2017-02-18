@@ -29,7 +29,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
             copies.clear();
             timeOfLastAttemption = 0;
         } else
-            for (int i = 0; i < copies.size(); i++)
+            for (int i = 0; i < copies.size(); i++) {
                 if (!copies.get(i).check()) {
                     if (i == copies.size() - 1)
                         if (copies.size() > 1)
@@ -39,6 +39,9 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
                     copies.get(i).repair();
                     copies.remove(i);
                 }
+            }
+            if (copies.isEmpty())
+                FilesManager.deleteFile(new File(copyingFileSource+"\\"+file.getName()));
     }
 
     public boolean checkCopies() {
