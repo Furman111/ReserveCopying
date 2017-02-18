@@ -655,7 +655,7 @@ public class MainWindow extends JFrame implements Observer {
 
     public void setCopyingObject(CopyObject object){
         this.copyingNow = object;
-        if (journal.get(table.getSelectedRow())==object){
+        if (table.getSelectedRow()>-1 &&  journal.get(table.getSelectedRow())==object){
             upgrade.setEnabled(false);
             information.setEnabled(false);
             delete.setEnabled(false);
@@ -663,7 +663,7 @@ public class MainWindow extends JFrame implements Observer {
     }
 
     public void cancelCopyingNow(){
-        if (journal.get(table.getSelectedRow())==copyingNow){
+        if ((table.getSelectedRow()>-1) && (journal.get(table.getSelectedRow())==copyingNow)){
             upgrade.setEnabled(true);
             information.setEnabled(true);
             delete.setEnabled(true);

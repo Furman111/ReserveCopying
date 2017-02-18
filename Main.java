@@ -27,7 +27,9 @@ public class Main {
             JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
         journal.repairCopies();
+
         MainWindow mainWindow = new MainWindow(journal);
+
         Thread tracking = new Thread(new CopierThread(journal,mainWindow));
         tracking.start();
 
@@ -36,7 +38,6 @@ public class Main {
                 mainWindow.setVisible(true);
             }
         });
-
 
     }
 }

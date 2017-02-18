@@ -18,6 +18,28 @@ public class FileCopyObject implements CopyObject, Serializable {
     private Mode mode;
     private ArrayList<CopyOfFile> copies;
     private long timeToCopy;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileCopyObject that = (FileCopyObject) o;
+
+        if (timeToCopy != that.timeToCopy) return false;
+        if (timeOfLastAttemption != that.timeOfLastAttemption) return false;
+        if (file != null ? !file.equals(that.file) : that.file != null) return false;
+        if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
+            return false;
+        if (mode != that.mode) return false;
+        return copies != null ? copies.equals(that.copies) : that.copies == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
+    }
+
     private long timeOfLastAttemption;
 
     public void repairCopies() {
@@ -57,33 +79,6 @@ public class FileCopyObject implements CopyObject, Serializable {
                     FilesManager.deleteZipFile(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()));
                 copies.remove(i);
             }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileCopyObject that = (FileCopyObject) o;
-
-        if (timeToCopy != that.timeToCopy) return false;
-        if (timeOfLastAttemption != that.timeOfLastAttemption) return false;
-        if (file != null ? !file.equals(that.file) : that.file != null) return false;
-        if (copyingFileSource != null ? !copyingFileSource.equals(that.copyingFileSource) : that.copyingFileSource != null)
-            return false;
-        if (mode != that.mode) return false;
-        return copies != null ? copies.equals(that.copies) : that.copies == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = file != null ? file.hashCode() : 0;
-        result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
-        result = 31 * result + (mode != null ? mode.hashCode() : 0);
-        result = 31 * result + (copies != null ? copies.hashCode() : 0);
-        result = 31 * result + (int) (timeToCopy ^ (timeToCopy >>> 32));
-        result = 31 * result + (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
-        return result;
     }
 
     public FileCopyObject(File file, File copyingFileSource, Mode mode, long time) {

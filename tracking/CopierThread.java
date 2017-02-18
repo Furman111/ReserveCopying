@@ -10,6 +10,8 @@ import gui.MainWindow;
 import observing.Observable;
 import observing.Observer;
 
+import static java.lang.Thread.yield;
+
 /**
  * Created by Furman on 26.01.2017.
  */
@@ -40,16 +42,13 @@ public class CopierThread implements Runnable, Observable {
 
     public void run() {
         while (!Thread.interrupted()) {
-            try {
-                sort(journal.hashCode());
-                long currentTime = System.currentTimeMillis();
-                if (!copyList.isEmpty() && ((copyList.get(0).getTimeOfLastAttemption() + copyList.get(0).getTimeToCopy()) <= currentTime)) {
-                    mainWindow.setCopyingObject(copyList.get(0));
-                    copyList.get(0).copy(currentTime);
-                    notifyObservers();
-                    mainWindow.cancelCopyingNow();
-                }
-            } catch (Exception e) {
+            sort(journal.hashCode());
+            long currentTime = System.currentTimeMillis();
+            if ((!copyList.isEmpty()) && ((copyList.get(0).getTimeOfLastAttemption() + copyList.get(0).getTimeToCopy()) <= currentTime)) {
+                mainWindow.setCopyingObject(copyList.get(0));
+                copyList.get(0).copy(currentTime);
+                notifyObservers();
+                mainWindow.cancelCopyingNow();
             }
         }
     }

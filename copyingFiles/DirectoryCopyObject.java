@@ -196,14 +196,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
 
     @Override
     public int hashCode() {
-        int result = mode != null ? mode.hashCode() : 0;
-        result = 31 * result + (int) (timeToCopy ^ (timeToCopy >>> 32));
-        result = 31 * result + (file != null ? file.hashCode() : 0);
-        result = 31 * result + (copyingFileSource != null ? copyingFileSource.hashCode() : 0);
-        result = 31 * result + (copies != null ? copies.hashCode() : 0);
-        result = 31 * result + (copyObjects != null ? copyObjects.hashCode() : 0);
-        result = 31 * result + (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
-        return result;
+        return (int) (timeOfLastAttemption ^ (timeOfLastAttemption >>> 32));
     }
 
     public long getLastCopyTime() {
