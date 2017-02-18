@@ -17,7 +17,7 @@ public class CopyOfFile implements Serializable {
         this.timeOfModification = timeOfModification;
         this.deleted = deleted;
         Random random = new Random();
-        nameOfCopyFile = new String(random.nextLong()+"_"+random.nextLong());
+        nameOfCopyFile = new String(random.nextInt()+"_"+random.nextInt());
     }
 
     @Override

@@ -3,7 +3,7 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfDirectory;
 import modesOfCopying.*;
 import fileSystemProcess.FilesManager;
-
+import java.util.Random;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,9 +23,10 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     private ArrayList<CopyOfDirectory> copies;
     private ArrayList<CopyObject> copyObjects;
     private long timeOfLastAttemption;
+    private String copyName;
 
     public void repairCopies() {
-        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists())) {
+        if (!(new File(copyingFileSource.getPath() + "\\" + copyName).exists())) {
             copies.clear();
             timeOfLastAttemption = 0;
         } else
@@ -41,12 +42,12 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
                 }
             }
             if (copies.isEmpty())
-                FilesManager.deleteFile(new File(copyingFileSource+"\\"+file.getName()));
+                FilesManager.deleteFile(new File(copyingFileSource+"\\"+copyName));
     }
 
     public boolean checkCopies() {
         boolean res = true;
-        if (!new File(copyingFileSource.getPath() + "\\" + file.getName()).exists())
+        if (!new File(copyingFileSource.getPath() + "\\" + copyName).exists())
             return false;
         else
             for (int i = 0; i < copies.size(); i++) {
@@ -58,7 +59,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
 
     public boolean checkCopyInTime(long time) {
         boolean res = false;
-        if (!(new File(copyingFileSource.getPath() + "\\" + file.getName()).exists()))
+        if (!(new File(copyingFileSource.getPath() + "\\" + copyName).exists()))
             return false;
         else
             for (int i = 0; i < copies.size(); i++)
@@ -85,6 +86,8 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
             copyObjects = new ArrayList<>();
             copyObjects.clear();
             timeOfLastAttemption = 0;
+            Random random = new Random();
+            copyName = new String(random.nextInt()+"_"+random.nextInt());
         } else
             throw new Error("Файл не существует");
     }
@@ -93,7 +96,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
     public boolean copy(long t) {
         timeOfLastAttemption = t;
         if (file.exists()) {
-            File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
+            File temp = new File(copyingFileSource.getPath() + "\\" + copyName);
             for (int i = 0; i < file.list().length; i++) {
                 boolean contains = false;
                 for (CopyObject o : copyObjects) {
@@ -132,7 +135,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
         for (CopyOfDirectory cop : copies) {
             cop.delete();
         }
-        File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
+        File temp = new File(copyingFileSource.getPath() + "\\" + copyName);
         return (FilesManager.deleteFile(temp));
     }
 
@@ -141,7 +144,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
             throw new NoSuchElementException();
 
         FilesManager.deleteFile(file);
-        File temp = new File(copyingFileSource.getPath() + "\\" + file.getName());
+        File temp = new File(copyingFileSource.getPath() + "\\" + copyName);
         if (!file.exists()) FilesManager.copyFileFromTo(temp, file);
         for (int i = 0; i < copies.size(); i++) {
             if (copies.get(i).getTime() == time)
