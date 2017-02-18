@@ -3,6 +3,7 @@ package dataManager; /**
  */
 
 import copyingFiles.Journal;
+import fileSystemProcess.FilesManager;
 
 import javax.swing.*;
 import java.io.*;
@@ -85,13 +86,23 @@ public class DataManager {
 
 
     public static void setDefaultDirectoryForCopies(File file) {
-        DataManager.defaultDirectoryForCopies = file;
-        try{
-            saveDefaultDirectoryForCopies();
+        if(FilesManager.fileWithPathExists(file.getPath())) {
+            DataManager.defaultDirectoryForCopies = file;
+            try {
+                saveDefaultDirectoryForCopies();
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+            }
         }
-        catch (IOException e){
-            JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        else{
+            DataManager.defaultDirectoryForCopies = new File(System.getProperty("user.home"));
+            try {
+                saveDefaultDirectoryForCopies();
+            } catch (IOException e) {
+                JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+            }
         }
+
     }
 
 }

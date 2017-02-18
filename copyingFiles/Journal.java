@@ -1,5 +1,7 @@
 package copyingFiles;
 
+import fileSystemProcess.FilesManager;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,8 +53,12 @@ public class Journal implements Iterable<CopyObject>, Serializable {
     }
 
     public synchronized void repairCopies() {
-        for (CopyObject copyObject : copyFiles)
+       for(int i=0;i<copyFiles.size();i++)
+            if (!FilesManager.fileWithPathExists(copyFiles.get(i).getPathToCopies()))
+                delete(copyFiles.get(i));
+        for (CopyObject copyObject : copyFiles) {
             copyObject.repairCopies();
+        }
     }
 
     public CopyObject get(CopyObject object) {

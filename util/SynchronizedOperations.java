@@ -2,6 +2,10 @@ package util;
 
 import copyingFiles.CopyObject;
 import copyingFiles.Journal;
+import dataManager.DataManager;
+
+import javax.swing.*;
+
 /**
  * Created by Furman on 18.02.2017.
  */
@@ -30,6 +34,11 @@ public class SynchronizedOperations {
     }
 
     public synchronized void exit(){
+        try {
+            DataManager.saveJournal();
+        } catch (Exception except) {
+            JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+        }
         System.exit(0);
     }
 

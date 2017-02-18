@@ -292,11 +292,6 @@ public class MainWindow extends JFrame implements Observer {
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
-                    try {
-                        DataManager.saveJournal();
-                    } catch (Exception except) {
-                        JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                    }
                     setVisible(false);
                     operator.exit();
                 }
@@ -370,19 +365,13 @@ public class MainWindow extends JFrame implements Observer {
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
-                    try {
-                        DataManager.saveJournal();
-                    } catch (Exception except) {
-                        JOptionPane.showConfirmDialog(null, except.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                    }
-                    setVisible(false);
                     operator.exit();
                 }
             }
 
             @Override
             public void windowClosed(WindowEvent e) {
-                MainWindow.super.toFront();
+
             }
 
             @Override
