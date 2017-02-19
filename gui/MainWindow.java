@@ -181,6 +181,7 @@ public class MainWindow extends JFrame implements Observer {
                         public void windowClosing(WindowEvent e) {
                             addWindow.setVisible(false);
                             MainWindow.super.setState(NORMAL);
+                            MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
                         }
 
@@ -539,6 +540,7 @@ public class MainWindow extends JFrame implements Observer {
                         @Override
                         public void windowClosing(WindowEvent e) {
                             MainWindow.super.setState(NORMAL);
+                            MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
                         }
 
