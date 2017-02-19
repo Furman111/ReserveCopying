@@ -1,7 +1,7 @@
 package gui;
 
 import copyingFiles.CopyObject;
-import util.TimeInMillisParcer;
+import timeUtilits.TimeInMillisParcer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -1,5 +1,6 @@
-package copyingFiles;
+package copyingObjectsOperations;
 
+import copyingFiles.CopyObject;
 import fileSystemProcess.FilesManager;
 
 import java.io.Serializable;

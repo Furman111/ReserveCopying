@@ -1,9 +1,9 @@
 package gui;
 
 import copyingFiles.CopyObject;
-import util.SynchronizedOperations;
-import util.TimeInMillisParcer;
-import javax.management.OperationsException;
+import copyingObjectsOperations.SynchronizedOperations;
+import timeUtilits.TimeInMillisParcer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +21,7 @@ public class UpgradeWindow extends JFrame {
     private JComboBox<String> timesComboBox;
     private JButton chooseButton;
     private SynchronizedOperations operator;
-    private ProcessingWindow processingWindow;
+    private JFrame processingWindow;
 
     public UpgradeWindow(CopyObject upgradingObject,SynchronizedOperations operator){
         super("Восстановить "+upgradingObject.getName());
@@ -61,6 +61,7 @@ public class UpgradeWindow extends JFrame {
                         try {
                             setVisible(false);
                             processingWindow = new ProcessingWindow("Восстановление", "Файл восстанавливается...");
+                            processingWindow.setLocationRelativeTo(UpgradeWindow.super.getRootPane());
                             processingWindow.setVisible(true);
                             operator.upgrade(object,object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
                             processingWindow.setVisible(false);
@@ -71,6 +72,7 @@ public class UpgradeWindow extends JFrame {
                             JOptionPane.showConfirmDialog(null, "Копия файла была удалена или повреждена!", "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                         }
                         finally {
+                            processingWindow.dispose();
                             processingWindow = null;
                             dispose();
                         }

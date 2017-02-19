@@ -22,8 +22,6 @@ public interface CopyObject {
 
     boolean isFile();
 
-    boolean isDirectory();
-
     String getName();
 
     long getLastCopyTime();
@@ -31,8 +29,6 @@ public interface CopyObject {
     long getTimeToCopy();
 
     long getTimeOfLastAttemption();
-
-    boolean checkCopies();
 
     void repairCopies();
 

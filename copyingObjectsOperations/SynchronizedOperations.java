@@ -1,7 +1,7 @@
-package util;
+package copyingObjectsOperations;
 
 import copyingFiles.CopyObject;
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 import dataManager.DataManager;
 
 import javax.swing.*;

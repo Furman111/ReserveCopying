@@ -1,12 +1,12 @@
 package tracking;
 
 import copyingFiles.CopyObject;
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 import java.util.ArrayList;
 import java.util.List;
 import observing.Observable;
 import observing.Observer;
-import util.SynchronizedOperations;
+import copyingObjectsOperations.SynchronizedOperations;
 
 
 /**

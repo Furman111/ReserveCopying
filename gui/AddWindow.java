@@ -2,7 +2,7 @@ package gui;
 
 import copyingFiles.DirectoryCopyObject;
 import copyingFiles.FileCopyObject;
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 import dataManager.DataManager;
 import fileSystemProcess.FilesManager;
 import javax.swing.*;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import modesOfCopying.Mode;
 import observing.Observable;
 import observing.Observer;
-import util.SynchronizedOperations;
-import util.TimeInMillisParcer;
+import copyingObjectsOperations.SynchronizedOperations;
+import timeUtilits.TimeInMillisParcer;
 import static modesOfCopying.Mode.DIF;
 import static modesOfCopying.Mode.INC;
 

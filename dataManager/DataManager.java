@@ -2,7 +2,7 @@ package dataManager; /**
  * Created by Furman on 25.01.2017.
  */
 
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 import fileSystemProcess.FilesManager;
 
 import javax.swing.*;

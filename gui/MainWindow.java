@@ -1,7 +1,6 @@
 package gui;
 
-import copyingFiles.CopyObject;
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,9 +16,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
+import copyingObjectsOperations.SynchronizedOperations;
 import observing.*;
 import dataManager.DataManager;
-import util.*;
+import timeUtilits.*;
 
 /**
  * Created by Furman on 02.02.2017.
@@ -96,7 +96,7 @@ public class MainWindow extends JFrame implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Object[] options = {"Выйти", "Отмена"};
-                int n = JOptionPane.showOptionDialog(null, "Вы уверены, что хотите выйти?",
+                int n = JOptionPane.showOptionDialog(MainWindow.super.getRootPane(), "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
@@ -169,6 +169,7 @@ public class MainWindow extends JFrame implements Observer {
                 if (addWindow == null) {
                     try {
                         addWindow = new AddWindow(journal,MainWindow.this::dataChanged,operator);
+                        addWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     } catch (Exception e1) {
                         JOptionPane.showConfirmDialog(null, e1.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                     }
@@ -230,6 +231,7 @@ public class MainWindow extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if (setDefaultDirectoryForCopiesWindow == null) {
                     setDefaultDirectoryForCopiesWindow = new setDefaultDirectoryForCopiesWindow();
+                    setDefaultDirectoryForCopiesWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     setDefaultDirectoryForCopiesWindow.setVisible(true);
                     setDefaultDirectoryForCopiesWindow.addWindowListener(new WindowListener() {
                         @Override
@@ -293,6 +295,9 @@ public class MainWindow extends JFrame implements Observer {
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
                     setVisible(false);
+                    JFrame processingWindow = new ProcessingWindow("Завершение работы","Работа приложения завершается...");
+                    processingWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
+                    processingWindow.setVisible(true);
                     operator.exit();
                 }
             }
@@ -361,10 +366,13 @@ public class MainWindow extends JFrame implements Observer {
             @Override
             public void windowClosing(WindowEvent e) {
                 Object[] options = {"Выйти", "Отмена"};
-                int n = JOptionPane.showOptionDialog(e.getWindow(), "Вы уверены, что хотите выйти?",
+                int n = JOptionPane.showOptionDialog(MainWindow.super.getRootPane(), "Вы уверены, что хотите выйти?",
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
+                    JFrame processingWindow = new ProcessingWindow("Завершение работы","Работа приложения завершается...");
+                    processingWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
+                    processingWindow.setVisible(true);
                     operator.exit();
                 }
             }
@@ -518,6 +526,7 @@ public class MainWindow extends JFrame implements Observer {
             if (e.getSource() == information) {
                 if (infoWindow == null) {
                     infoWindow = new InfoWindow(journal.get(table.getSelectedRow()));
+                    infoWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     infoWindow.setVisible(true);
                     infoWindow.addWindowListener(new WindowListener() {
                         @Override
@@ -570,6 +579,7 @@ public class MainWindow extends JFrame implements Observer {
 
             if (e.getSource() == upgrade) {
                 upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()),operator);
+                upgradeWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                 upgradeWindow.setVisible(true);
                 upgradeWindow.addWindowListener(new WindowListener() {
                     @Override
@@ -622,7 +632,8 @@ public class MainWindow extends JFrame implements Observer {
                 Object[] options = {"Удалить", "Отмена"};
                 int n = JOptionPane.showOptionDialog(MainWindow.super.getParent(), "Вы уверены, что хотите удалить объект копирования? Безвозвратно будут удалены все созданные копии файла.", "Удалить копирование", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                 if (n == 0) {
-                    ProcessingWindow processingWindow = new ProcessingWindow("Удаление", "Созданные копии удаляются...");
+                    JFrame processingWindow = new ProcessingWindow("Удаление", "Созданные копии удаляются...");
+                    processingWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     MainWindow.super.setEnabled(false);
                     processingWindow.setVisible(true);
                     operator.delete(journal.get(table.getSelectedRow()));

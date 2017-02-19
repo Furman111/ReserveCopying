@@ -3,11 +3,11 @@
  */
 
 
-import copyingFiles.Journal;
+import copyingObjectsOperations.Journal;
 import dataManager.DataManager;
 import gui.MainWindow;
 import tracking.CopierThread;
-import util.SynchronizedOperations;
+import copyingObjectsOperations.SynchronizedOperations;
 
 import javax.swing.*;
 
