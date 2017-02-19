@@ -1,6 +1,7 @@
 package gui;
 
 import dataManager.DataManager;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
@@ -8,9 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-/**
- * Created by FurmanT on 11.02.2017.
- */
+
 public class setDefaultDirectoryForCopiesWindow extends JFrame {
 
     private JLabel mainLabel;
@@ -41,7 +40,7 @@ public class setDefaultDirectoryForCopiesWindow extends JFrame {
         try {
             pathLabel = new JLabel(DataManager.getDefaultDirectoryForCopies().getAbsolutePath());
         } catch (Exception e) {
-            JOptionPane.showConfirmDialog(this,e.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showConfirmDialog(this, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
         pathLabel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
@@ -86,9 +85,8 @@ public class setDefaultDirectoryForCopiesWindow extends JFrame {
                 DataManager.setDefaultDirectoryForCopies(new File(pathLabel.getText()));
                 try {
                     DataManager.saveDefaultDirectoryForCopies();
-                }
-                catch (Exception exc){
-                    JOptionPane.showConfirmDialog(null,exc.getMessage(),"Ошибка!",JOptionPane.DEFAULT_OPTION,JOptionPane.ERROR_MESSAGE);
+                } catch (Exception exc) {
+                    JOptionPane.showConfirmDialog(null, exc.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
                 }
                 dispose();
             }

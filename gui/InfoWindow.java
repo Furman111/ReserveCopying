@@ -2,6 +2,7 @@ package gui;
 
 import copyingFiles.CopyObject;
 import timeUtilits.TimeInMillisParcer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,9 +10,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
-/**
- * Created by Furman on 08.02.2017.
- */
 public class InfoWindow extends JFrame {
     private CopyObject object;
 
@@ -45,7 +43,6 @@ public class InfoWindow extends JFrame {
 
         pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-
 
 
         nameLabel = new JLabel("Имя: " + this.object.getName());
@@ -85,7 +82,7 @@ public class InfoWindow extends JFrame {
             copiesTimesLabel = new JLabel("Копии сделаны в следующие моменты времени:");
             pane.add(copiesTimesLabel);
             for (int i = 0; i < this.object.getListOfCopiesTimes().size(); i++) {
-                times.add(new JLabel(i+1+") "+TimeInMillisParcer.millisToDate(this.object.getListOfCopiesTimes().get(i))));
+                times.add(new JLabel(i + 1 + ") " + TimeInMillisParcer.millisToDate(this.object.getListOfCopiesTimes().get(i))));
                 pane.add(times.get(i));
             }
         }
@@ -93,7 +90,7 @@ public class InfoWindow extends JFrame {
 
         scrollPane = new JScrollPane(pane);
         scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(470,410));
+        scrollPane.setPreferredSize(new Dimension(470, 410));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(scrollPane);

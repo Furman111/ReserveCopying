@@ -3,6 +3,7 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfDirectory;
 import modesOfCopying.*;
 import fileSystemProcess.FilesManager;
+
 import java.util.Random;
 import java.io.File;
 import java.io.Serializable;
@@ -10,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/**
- * Created by Furman on 21.01.2017.
- */
 
 public class DirectoryCopyObject implements CopyObject, Serializable {
 
@@ -41,20 +39,8 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
                     copies.remove(i);
                 }
             }
-            if (copies.isEmpty())
-                FilesManager.deleteFile(new File(copyingFileSource+"\\"+copyName));
-    }
-
-    public boolean checkCopies() {
-        boolean res = true;
-        if (!new File(copyingFileSource.getPath() + "\\" + copyName).exists())
-            return false;
-        else
-            for (int i = 0; i < copies.size(); i++) {
-                if (!copies.get(i).check())
-                    res = false;
-            }
-        return res;
+        if (copies.isEmpty())
+            FilesManager.deleteFile(new File(copyingFileSource + "\\" + copyName));
     }
 
     public boolean checkCopyInTime(long time) {
@@ -87,7 +73,7 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
             copyObjects.clear();
             timeOfLastAttemption = 0;
             Random random = new Random();
-            copyName = new String(random.nextInt()+"_"+random.nextInt());
+            copyName = new String(random.nextInt() + "_" + random.nextInt());
         } else
             throw new Error("Файл не существует");
     }
@@ -170,10 +156,6 @@ public class DirectoryCopyObject implements CopyObject, Serializable {
 
     public boolean isFile() {
         return false;
-    }
-
-    public boolean isDirectory() {
-        return true;
     }
 
     public String getName() {

@@ -1,6 +1,4 @@
-package dataManager; /**
- * Created by Furman on 25.01.2017.
- */
+package dataManager;
 
 import copyingObjectsOperations.Journal;
 import fileSystemProcess.FilesManager;
@@ -72,29 +70,28 @@ public class DataManager {
     }
 
     public static void saveDefaultDirectoryForCopies() throws IOException {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
-                out.writeObject(defaultDirectoryForCopies);
-                File file = new File(FILE_PATH);
-                file.setWritable(true);
-                file.setReadable(true);
-            } catch (FileNotFoundException e) {
-                throw new FileNotFoundException("Файл не найден!");
-            } catch (IOException e) {
-                throw new IOException("Не удалось сохранить стандартную директорию для сохранения копий!");
-            }
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+            out.writeObject(defaultDirectoryForCopies);
+            File file = new File(FILE_PATH);
+            file.setWritable(true);
+            file.setReadable(true);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Файл не найден!");
+        } catch (IOException e) {
+            throw new IOException("Не удалось сохранить стандартную директорию для сохранения копий!");
         }
+    }
 
 
     public static void setDefaultDirectoryForCopies(File file) {
-        if(FilesManager.fileWithPathExists(file.getPath())) {
+        if (FilesManager.fileWithPathExists(file.getPath())) {
             DataManager.defaultDirectoryForCopies = file;
             try {
                 saveDefaultDirectoryForCopies();
             } catch (IOException e) {
                 JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
             }
-        }
-        else{
+        } else {
             DataManager.defaultDirectoryForCopies = new File(System.getProperty("user.home"));
             try {
                 saveDefaultDirectoryForCopies();
@@ -102,7 +99,5 @@ public class DataManager {
                 JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
             }
         }
-
     }
-
 }

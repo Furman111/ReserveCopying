@@ -9,9 +9,6 @@ import java.util.zip.ZipOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-/**
- * Created by Furman on 24.01.2017.
- */
 public class FilesManager {
 
     public static boolean copyFileFromTo(File from, File to) {
@@ -47,22 +44,23 @@ public class FilesManager {
         return true;
     }
 
-    public static boolean deleteZipFile(File zipFile){
-        return (new File(zipFile.toPath()+".zip").delete());
+    public static boolean deleteZipFile(File zipFile) {
+        return (new File(zipFile.toPath() + ".zip").delete());
     }
 
     public static boolean zipToFileCopy(File from, File to) {
         try {
-            ZipFile zipFile = new ZipFile(from.getPath()+".zip");
+            ZipFile zipFile = new ZipFile(from.getPath() + ".zip");
             Enumeration entries = zipFile.entries();
             if (to.exists())
                 deleteFile(to);
-            while(entries.hasMoreElements()){
-                ZipEntry entry =(ZipEntry) entries.nextElement();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
                 write(zipFile.getInputStream(entry), new FileOutputStream(to));
             }
+        } catch (IOException e) {
+            return false;
         }
-        catch(IOException e){return false;}
         return true;
     }
 
@@ -75,28 +73,29 @@ public class FilesManager {
         in.close();
     }
 
-    public static boolean copyExists(File file){
-        return (new File(file.getPath()+".zip").exists());
+    public static boolean copyExists(File file) {
+        return (new File(file.getPath() + ".zip").exists());
     }
 
-    public static boolean renameCopy(File file,String name){
+    public static boolean renameCopy(File file, String name) {
         try {
             Files.copy(new File(file.getPath() + ".zip").toPath(), new File(name + ".zip").toPath());
+        } catch (IOException e) {
+            return false;
         }
-        catch (IOException e){return false;}
         return true;
     }
 
-    public static boolean fileWithPathExists(String path){
+    public static boolean fileWithPathExists(String path) {
         File temp = new File(path);
         if (temp.exists()) return true;
         else
             return false;
     }
 
-    public static boolean isDirectory(String path){
+    public static boolean isDirectory(String path) {
         File temp = new File(path);
-        if(temp.isDirectory()) return true;
+        if (temp.isDirectory()) return true;
         else
             return false;
     }

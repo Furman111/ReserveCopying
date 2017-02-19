@@ -3,14 +3,12 @@ package copyingFiles;
 import copyingFiles.copies.CopyOfFile;
 import modesOfCopying.Mode;
 import fileSystemProcess.FilesManager;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 
 
-/**
- * Created by Furman on 21.01.2017.
- */
 public class FileCopyObject implements CopyObject, Serializable {
 
     private File file;
@@ -50,17 +48,8 @@ public class FileCopyObject implements CopyObject, Serializable {
                         timeOfLastAttemption = copies.get(i - 1).getTimeOfCopy();
                     else
                         timeOfLastAttemption = 0;
-                        copies.remove(i);
+                copies.remove(i);
             }
-    }
-
-    public boolean checkCopies() {
-        boolean res = true;
-        for (int i = 0; i < copies.size(); i++)
-            if (!FilesManager.copyExists(new File(copyingFileSource + "\\" + copies.get(i).getNameOfCopyFile()))) {
-                res = false;
-            }
-        return res;
     }
 
     public boolean checkCopyInTime(long time) {
@@ -213,10 +202,6 @@ public class FileCopyObject implements CopyObject, Serializable {
 
     public boolean isFile() {
         return true;
-    }
-
-    public boolean isDirectory() {
-        return false;
     }
 
     public String getName() {

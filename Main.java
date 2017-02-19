@@ -1,8 +1,3 @@
-/**
- * Created by Furman on 21.01.2017.
- */
-
-
 import copyingObjectsOperations.Journal;
 import dataManager.DataManager;
 import gui.MainWindow;
@@ -16,25 +11,23 @@ public class Main {
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
 
         Journal journal = null;
         try {
             journal = DataManager.getJournal();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showConfirmDialog(null, e.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
         }
         journal.repairCopies();
 
         SynchronizedOperations operator = new SynchronizedOperations(journal);
 
-        MainWindow mainWindow = new MainWindow(journal,operator);
+        MainWindow mainWindow = new MainWindow(journal, operator);
 
-        Thread tracking = new Thread(new CopierThread(journal,mainWindow,operator));
+        Thread tracking = new Thread(new CopierThread(journal, mainWindow, operator));
         tracking.start();
 
         java.awt.EventQueue.invokeLater(new Runnable() {

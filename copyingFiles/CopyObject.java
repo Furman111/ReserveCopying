@@ -1,11 +1,10 @@
 package copyingFiles;
 
 import modesOfCopying.Mode;
+
 import java.util.List;
 
-/**
- * Created by Furman on 21.01.2017.
- */
+
 public interface CopyObject {
 
     boolean copy(long timeOfCopy);

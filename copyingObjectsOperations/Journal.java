@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Furman on 25.01.2017.
- */
 public class Journal implements Iterable<CopyObject>, Serializable {
     private List<CopyObject> copyFiles;
 
@@ -54,7 +51,7 @@ public class Journal implements Iterable<CopyObject>, Serializable {
     }
 
     public synchronized void repairCopies() {
-       for(int i=0;i<copyFiles.size();i++)
+        for (int i = 0; i < copyFiles.size(); i++)
             if (!FilesManager.fileWithPathExists(copyFiles.get(i).getPathToCopies()))
                 delete(copyFiles.get(i));
         for (CopyObject copyObject : copyFiles) {

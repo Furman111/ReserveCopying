@@ -2,16 +2,15 @@ package tracking;
 
 import copyingFiles.CopyObject;
 import copyingObjectsOperations.Journal;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import observing.Observable;
 import observing.Observer;
 import copyingObjectsOperations.SynchronizedOperations;
 
 
-/**
- * Created by Furman on 26.01.2017.
- */
 public class CopierThread implements Runnable, Observable {
     private Journal journal;
     private List<CopyObject> copyList;
@@ -19,7 +18,7 @@ public class CopierThread implements Runnable, Observable {
     private List<Observer> observers;
     private SynchronizedOperations operator;
 
-    public CopierThread(Journal journal, Observer o,SynchronizedOperations operator) {
+    public CopierThread(Journal journal, Observer o, SynchronizedOperations operator) {
         this.journal = journal;
         this.observers = new ArrayList<>();
         this.operator = operator;
@@ -42,7 +41,7 @@ public class CopierThread implements Runnable, Observable {
             sort(journal.hashCode());
             long currentTime = System.currentTimeMillis();
             if ((!copyList.isEmpty()) && ((copyList.get(0).getTimeOfLastAttemption() + copyList.get(0).getTimeToCopy()) <= currentTime)) {
-                operator.copy(copyList.get(0),currentTime);
+                operator.copy(copyList.get(0), currentTime);
                 notifyObservers();
             }
         }
@@ -50,10 +49,6 @@ public class CopierThread implements Runnable, Observable {
 
     public void registerObserver(Observer o) {
         observers.add(o);
-    }
-
-    public void removeObserver(Observer o) {
-        observers.remove(o);
     }
 
     public void notifyObservers() {

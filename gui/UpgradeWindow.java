@@ -9,10 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-
-/**
- * Created by Furman on 09.02.2017.
- */
 public class UpgradeWindow extends JFrame {
 
     private CopyObject object;
@@ -23,8 +19,8 @@ public class UpgradeWindow extends JFrame {
     private SynchronizedOperations operator;
     private JFrame processingWindow;
 
-    public UpgradeWindow(CopyObject upgradingObject,SynchronizedOperations operator){
-        super("Восстановить "+upgradingObject.getName());
+    public UpgradeWindow(CopyObject upgradingObject, SynchronizedOperations operator) {
+        super("Восстановить " + upgradingObject.getName());
         object = upgradingObject;
         processingWindow = null;
 
@@ -32,20 +28,20 @@ public class UpgradeWindow extends JFrame {
 
         chooseLabel = new JLabel("Выберите время состояния файла, которое вы хотите восстановить:");
         chooseLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        chooseLabel.setPreferredSize(new Dimension(450,20));
+        chooseLabel.setPreferredSize(new Dimension(450, 20));
         add(chooseLabel);
 
         timeLabel = new JLabel("Дата и время: ");
-        timeLabel.setPreferredSize(new Dimension(100,20));
+        timeLabel.setPreferredSize(new Dimension(100, 20));
         add(timeLabel);
 
         timesComboBox = new JComboBox<>();
-        timesComboBox.setPreferredSize(new Dimension(200,20));
+        timesComboBox.setPreferredSize(new Dimension(200, 20));
         add(timesComboBox);
         timesComboBox.setEditable(false);
 
         chooseButton = new JButton("Восстановить");
-        chooseButton.setPreferredSize(new Dimension(140,20));
+        chooseButton.setPreferredSize(new Dimension(140, 20));
         chooseButton.setFocusPainted(false);
         chooseButton.setEnabled(false);
         add(chooseButton);
@@ -63,15 +59,13 @@ public class UpgradeWindow extends JFrame {
                             processingWindow = new ProcessingWindow("Восстановление", "Файл восстанавливается...");
                             processingWindow.setLocationRelativeTo(UpgradeWindow.super.getRootPane());
                             processingWindow.setVisible(true);
-                            operator.upgrade(object,object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
+                            operator.upgrade(object, object.getListOfCopiesTimes().get(timesComboBox.getSelectedIndex()));
                             processingWindow.setVisible(false);
-                        }
-                        catch (NoSuchElementException e1){
+                        } catch (NoSuchElementException e1) {
                             processingWindow.setVisible(false);
                             upgradingObject.repairCopies();
                             JOptionPane.showConfirmDialog(null, "Копия файла была удалена или повреждена!", "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
-                        }
-                        finally {
+                        } finally {
                             processingWindow.dispose();
                             processingWindow = null;
                             dispose();
@@ -81,7 +75,7 @@ public class UpgradeWindow extends JFrame {
             }
         });
 
-        for(long time: upgradingObject.getListOfCopiesTimes())
+        for (long time : upgradingObject.getListOfCopiesTimes())
             timesComboBox.addItem(TimeInMillisParcer.millisToDate(time));
 
 

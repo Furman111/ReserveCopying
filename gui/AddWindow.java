@@ -5,6 +5,7 @@ import copyingFiles.FileCopyObject;
 import copyingObjectsOperations.Journal;
 import dataManager.DataManager;
 import fileSystemProcess.FilesManager;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.MaskFormatter;
@@ -13,18 +14,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+
 import modesOfCopying.Mode;
 import observing.Observable;
 import observing.Observer;
 import copyingObjectsOperations.SynchronizedOperations;
 import timeUtilits.TimeInMillisParcer;
+
 import static modesOfCopying.Mode.DIF;
 import static modesOfCopying.Mode.INC;
 
 
-/**
- * Created by Furman on 09.02.2017.
- */
 public class AddWindow extends JFrame implements Observable {
 
     private Journal journal;

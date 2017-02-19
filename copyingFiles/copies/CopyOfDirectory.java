@@ -4,12 +4,7 @@ import copyingFiles.CopyObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
-
-/**
- * Created by Furman on 24.01.2017.
- */
 public class CopyOfDirectory implements Serializable {
     private long time;
     private ArrayList<CopyObject> files;
@@ -54,7 +49,7 @@ public class CopyOfDirectory implements Serializable {
         return time;
     }
 
-    public boolean upgrade(){
+    public boolean upgrade() {
         for (CopyObject j : files)
             if (!j.upgrade(time))
                 return false;
@@ -85,7 +80,6 @@ public class CopyOfDirectory implements Serializable {
         for (int i = 0; i < files.size(); i++)
             files.get(i).deleteCopyInTime(time);
     }
-
 
 }
 

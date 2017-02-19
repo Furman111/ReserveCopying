@@ -3,9 +3,6 @@ package copyingFiles.copies;
 import java.io.Serializable;
 import java.util.Random;
 
-/**
- * Created by Furman on 24.01.2017.
- */
 public class CopyOfFile implements Serializable {
     private long timeOfCopy;
     private long timeOfModification;
@@ -17,7 +14,7 @@ public class CopyOfFile implements Serializable {
         this.timeOfModification = timeOfModification;
         this.deleted = deleted;
         Random random = new Random();
-        nameOfCopyFile = new String(random.nextInt()+"_"+random.nextInt());
+        nameOfCopyFile = new String(random.nextInt() + "_" + random.nextInt());
     }
 
     @Override
@@ -40,7 +37,7 @@ public class CopyOfFile implements Serializable {
         return result;
     }
 
-    public String getNameOfCopyFile(){
+    public String getNameOfCopyFile() {
         return nameOfCopyFile;
     }
 
@@ -52,15 +49,11 @@ public class CopyOfFile implements Serializable {
         return timeOfModification;
     }
 
-    public void setDeleted() {
-        deleted = true;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }
 
-    public void setNameOfCopyFile(String nameOfCopyFile){
+    public void setNameOfCopyFile(String nameOfCopyFile) {
         this.nameOfCopyFile = nameOfCopyFile;
     }
 }

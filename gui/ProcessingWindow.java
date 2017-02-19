@@ -3,9 +3,7 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Furman on 18.02.2017.
- */
+
 public class ProcessingWindow extends JFrame {
 
     private JLabel label;

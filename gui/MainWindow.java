@@ -21,9 +21,7 @@ import observing.*;
 import dataManager.DataManager;
 import timeUtilits.*;
 
-/**
- * Created by Furman on 02.02.2017.
- */
+
 public class MainWindow extends JFrame implements Observer {
 
     private JMenuItem createNewCopyJMenu;
@@ -145,14 +143,13 @@ public class MainWindow extends JFrame implements Observer {
                             upgradeWindow.setFocusable(true);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     MainWindow.super.setVisible(false);
-                    if(upgradeWindow!=null) upgradeWindow.setVisible(false);
-                    if(addWindow!=null) addWindow.setVisible(false);
-                    if(infoWindow!=null) infoWindow.setVisible(false);
-                    if(setDefaultDirectoryForCopiesWindow!=null) setDefaultDirectoryForCopiesWindow.setVisible(false);
+                    if (upgradeWindow != null) upgradeWindow.setVisible(false);
+                    if (addWindow != null) addWindow.setVisible(false);
+                    if (infoWindow != null) infoWindow.setVisible(false);
+                    if (setDefaultDirectoryForCopiesWindow != null)
+                        setDefaultDirectoryForCopiesWindow.setVisible(false);
                 }
             }
         });
@@ -168,7 +165,7 @@ public class MainWindow extends JFrame implements Observer {
             public void actionPerformed(ActionEvent e) {
                 if (addWindow == null) {
                     try {
-                        addWindow = new AddWindow(journal,MainWindow.this::dataChanged,operator);
+                        addWindow = new AddWindow(journal, MainWindow.this::dataChanged, operator);
                         addWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     } catch (Exception e1) {
                         JOptionPane.showConfirmDialog(null, e1.getMessage(), "Ошибка!", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -295,7 +292,7 @@ public class MainWindow extends JFrame implements Observer {
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
                     setVisible(false);
-                    JFrame processingWindow = new ProcessingWindow("Завершение работы","Работа приложения завершается...");
+                    JFrame processingWindow = new ProcessingWindow("Завершение работы", "Работа приложения завершается...");
                     processingWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     processingWindow.setVisible(true);
                     operator.exit();
@@ -370,7 +367,7 @@ public class MainWindow extends JFrame implements Observer {
                         "Выход из программы", JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (n == 0) {
-                    JFrame processingWindow = new ProcessingWindow("Завершение работы","Работа приложения завершается...");
+                    JFrame processingWindow = new ProcessingWindow("Завершение работы", "Работа приложения завершается...");
                     processingWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                     processingWindow.setVisible(true);
                     operator.exit();
@@ -513,9 +510,9 @@ public class MainWindow extends JFrame implements Observer {
 
     public class tableListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
-                upgrade.setEnabled(true);
-                information.setEnabled(true);
-                delete.setEnabled(true);
+            upgrade.setEnabled(true);
+            information.setEnabled(true);
+            delete.setEnabled(true);
         }
     }
 
@@ -578,7 +575,7 @@ public class MainWindow extends JFrame implements Observer {
             }
 
             if (e.getSource() == upgrade) {
-                upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()),operator);
+                upgradeWindow = new UpgradeWindow(journal.get(table.getSelectedRow()), operator);
                 upgradeWindow.setLocationRelativeTo(MainWindow.super.getRootPane());
                 upgradeWindow.setVisible(true);
                 upgradeWindow.addWindowListener(new WindowListener() {
@@ -646,10 +643,6 @@ public class MainWindow extends JFrame implements Observer {
                 }
             }
         }
-    }
-
-    private Journal getJournal() {
-        return journal;
     }
 
     @Override
