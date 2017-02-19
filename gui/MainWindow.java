@@ -240,12 +240,14 @@ public class MainWindow extends JFrame implements Observer {
                         @Override
                         public void windowClosing(WindowEvent e) {
                             MainWindow.super.setState(NORMAL);
+                            MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
                         }
 
                         @Override
                         public void windowClosed(WindowEvent e) {
                             setDefaultDirectoryForCopiesWindow = null;
+                            MainWindow.super.setState(NORMAL);
                             MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
                         }
