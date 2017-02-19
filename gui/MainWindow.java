@@ -190,6 +190,7 @@ public class MainWindow extends JFrame implements Observer {
                             MainWindow.super.setState(NORMAL);
                             MainWindow.super.setEnabled(true);
                             MainWindow.super.toFront();
+                            table.clearSelection();
                         }
 
                         @Override
@@ -510,9 +511,11 @@ public class MainWindow extends JFrame implements Observer {
 
     public class tableListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
-            upgrade.setEnabled(true);
-            information.setEnabled(true);
-            delete.setEnabled(true);
+            if (table.getSelectedRow()>-1) {
+                upgrade.setEnabled(true);
+                information.setEnabled(true);
+                delete.setEnabled(true);
+            }
         }
     }
 
@@ -636,6 +639,7 @@ public class MainWindow extends JFrame implements Observer {
                     operator.delete(journal.get(table.getSelectedRow()));
                     processingWindow.dispose();
                     MainWindow.super.setEnabled(true);
+                    table.clearSelection();
                     information.setEnabled(false);
                     delete.setEnabled(false);
                     upgrade.setEnabled(false);

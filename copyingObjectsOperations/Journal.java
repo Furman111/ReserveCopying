@@ -64,7 +64,7 @@ public class Journal implements Iterable<CopyObject>, Serializable {
     }
 
     public synchronized void delete(CopyObject object) {
-        this.get(object).delete();
+        copyFiles.get(copyFiles.indexOf(object)).delete();
         copyFiles.remove(object);
     }
 
