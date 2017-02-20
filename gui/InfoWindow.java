@@ -59,7 +59,7 @@ public class InfoWindow extends JFrame {
 
         switch (object.getMode()) {
             case INC:
-                modeLabel = new JLabel("Режим резервного копирования: инкрементальный");
+                modeLabel = new JLabel("Режим резервного копирования: инкрементный");
             case DIF:
                 modeLabel = new JLabel("Режим резервного копирования: дифференциальный");
         }

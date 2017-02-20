@@ -1,6 +1,6 @@
 package gui;
 
-import dataManager.DataManager;
+import data.DataManager;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;

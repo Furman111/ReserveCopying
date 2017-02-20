@@ -18,7 +18,7 @@ import javax.swing.table.TableModel;
 
 import copyingObjectsOperations.SynchronizedOperations;
 import observing.*;
-import dataManager.DataManager;
+import data.DataManager;
 import timeUtilits.*;
 
 
@@ -481,7 +481,7 @@ public class MainWindow extends JFrame implements Observer {
                 case 2:
                     switch (journal.get(rowIndex).getMode()) {
                         case INC:
-                            return "Инкременталтный";
+                            return "Инкрементный";
                         case DIF:
                             return "Дифференциальный";
                     }

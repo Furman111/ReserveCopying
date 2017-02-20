@@ -1,7 +1,7 @@
 package copyingObjectsOperations;
 
 import copyingFiles.CopyObject;
-import dataManager.DataManager;
+import data.DataManager;
 
 import javax.swing.*;
 

@@ -3,7 +3,7 @@ package gui;
 import copyingFiles.DirectoryCopyObject;
 import copyingFiles.FileCopyObject;
 import copyingObjectsOperations.Journal;
-import dataManager.DataManager;
+import data.DataManager;
 import fileSystemProcess.FilesManager;
 
 import javax.swing.*;
@@ -148,7 +148,7 @@ public class AddWindow extends JFrame implements Observable {
         modeComboBox = new JComboBox<>();
         modeComboBox.setPreferredSize(new Dimension(200, 20));
         modeComboBox.addItem("Дифференциальный");
-        modeComboBox.addItem("Инкрементальный");
+        modeComboBox.addItem("Инкрементный");
         add(modeComboBox);
 
         JPanel panel = new JPanel(new FlowLayout());

@@ -1,4 +1,4 @@
-package dataManager;
+package data;
 
 import copyingObjectsOperations.Journal;
 import fileSystemProcess.FilesManager;

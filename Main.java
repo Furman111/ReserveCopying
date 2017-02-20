@@ -1,5 +1,5 @@
 import copyingObjectsOperations.Journal;
-import dataManager.DataManager;
+import data.DataManager;
 import gui.MainWindow;
 import tracking.CopierThread;
 import copyingObjectsOperations.SynchronizedOperations;
